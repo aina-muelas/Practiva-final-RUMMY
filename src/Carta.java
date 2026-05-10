@@ -1,17 +1,25 @@
 public class Carta {
     String numero;
-    String palo;
-    String color;
+    String palOColor;
 
-    public Carta(String numero, String palo, String color){
+    public Carta(String numero, String palOColor){
         this.numero = numero;
-        this.palo = palo;
-        this.color = color;
+        this.palOColor = palOColor;
     }
 
-    public Carta(String numero, String color){
+    public Carta(String numero){
         this.numero = numero;
-        this.color = color;
     }
 
+    public boolean esJoker() {
+        return "Joker".equals(this.numero);
+    }
+
+    @Override
+    public String toString() {
+        if (esJoker()) {
+            return "[JOKER]";
+        }
+        return "[" + numero + " de " + palOColor + "]";
+    }
 }
