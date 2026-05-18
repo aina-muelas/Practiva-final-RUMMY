@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Baralla {
     ArrayList<Carta> baralla = new ArrayList<Carta>();
@@ -10,15 +11,28 @@ public class Baralla {
     final String[] colorsRummiKub = {"Vermell", "Blau", "Groc", "Negre"};
 
 
-    public void crearCartesRummy() {
+    public void inicialitzarBaralla(int modalitat, int numBaralles) {
+        baralla.clear(); // 1. Netegem sempre primer
+        if (modalitat == 2) {
+            crearCartesRummiKub();
+        }
+        else {
+            for (int i = 0; i < numBaralles; i++){
+                crearBarallaFrancesa(modalitat);
+            }
+        }
+    }
+
+    public void crearBarallaFrancesa( int modalitat) {
         for (int pal = 0; pal < palsFrancesa.length; pal++) {
             for (int num = 0; num < numerosFrancesa.length; num++) {
                 baralla.add(new Carta(numerosFrancesa[num], palsFrancesa[pal]));
             }
         }
-
-        baralla.add(new Carta(joker));
-        baralla.add(new Carta(joker));
+        if (modalitat != 3) {
+            baralla.add(new Carta(joker));
+            baralla.add(new Carta(joker));
+        }
     }
 
     public void crearCartesRummiKub() {
@@ -32,4 +46,26 @@ public class Baralla {
         baralla.add(new Carta(joker));
         baralla.add(new Carta(joker));
     }
+
+    static int determinarQuantitatBaralles(int modalitat, int numJugadors){
+        if (modalitat == 1) {
+            return 2;
+        } else if (modalitat == 2) {
+            return 2;
+        } else if (modalitat == 3){
+            return 1;
+        } else if (modalitat == 4) {
+            if (numJugadors > 4) {
+                return 2;
+            } else {
+                return 1;
+            }
+        }
+        return 1;
+    }
+
+    public void mesclarCartes(){
+        Collections.shuffle(this.baralla);
+    }
+
 }
