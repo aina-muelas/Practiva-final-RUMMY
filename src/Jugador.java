@@ -1,14 +1,17 @@
+import java.util.ArrayList;
+
 public class Jugador {
     String nom;
-    String maCartes;
+    ArrayList<Carta> maCartes;
     int puntuacio;
 
     Jugador (String nom){
         this.nom = nom;
+        this.maCartes = new ArrayList<>();
     }
 
     @Override
     public String toString() {
-        return this.nom;
+        return "Jugador: " + nom + " | Cartes: " + maCartes;
     }
 }
