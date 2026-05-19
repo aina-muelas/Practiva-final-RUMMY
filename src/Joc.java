@@ -1,11 +1,4 @@
 public class Joc {
-    public static void prepararPartida(){
-        Baralla laMevaBaralla = new Baralla();
-        int nBaralles = Baralla.determinarQuantitatBaralles(modalitatJoc, numJugadors);
-        laMevaBaralla.inicialitzarBaralla(modalitatJoc, nBaralles);
-        laMevaBaralla.mesclarCartes();
-        repartirCartes(laMevaBaralla);
-    }
     static int modalitatJoc = Consola.triarModalitat();
     static int numJugadors = Consola.triarNumJugadors(modalitatJoc);
 
@@ -14,10 +7,8 @@ public class Joc {
     public static void establirNomsJugadors() {
         for (int i = 0; i < arrayJugadors.length; i++) {
             arrayJugadors[i] = new Jugador(Consola.triarNom(i));
-
         }
     }
-
 
     static int determinarCartesInicials(int modalitat, int numJugadors) {
         int cartes = 7; // valor per defecte
@@ -56,5 +47,19 @@ public class Joc {
                 }
             }
         }
+    }
+
+    public static void prepararPartida(){
+        establirNomsJugadors();
+
+        int nBaralles = Baralla.determinarQuantitatBaralles(modalitatJoc, numJugadors);
+        Baralla laMevaBaralla = new Baralla();
+        laMevaBaralla.inicialitzarBaralla(modalitatJoc, nBaralles);
+        laMevaBaralla.mesclarCartes();
+        repartirCartes(laMevaBaralla);
+    }
+
+    public void jugar(){
+        prepararPartida();
     }
 }
