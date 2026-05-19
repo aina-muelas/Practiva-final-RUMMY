@@ -10,6 +10,12 @@ public class Jugador {
         this.maCartes = new ArrayList<>();
     }
 
+    public ArrayList<Carta> getMaCartes() {
+        return maCartes;
+    }
+
+
+
     @Override
     public String toString() {
         return "Jugador: " + nom + " | Cartes: " + maCartes;
