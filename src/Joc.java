@@ -1,8 +1,30 @@
 public class Joc {
     static int modalitatJoc = Consola.triarModalitat();
     static int numJugadors = Consola.triarNumJugadors(modalitatJoc);
-
     static Jugador [] arrayJugadors = new Jugador [numJugadors];
+
+    public void jugar(){
+        prepararPartida();
+
+        if (modalitatJoc == 1) {
+            RummyClassic.jugarRummyClassic();
+        } else if (modalitatJoc == 2) {
+            Rummikub.jugarRummiKub();
+               } else if (modalitatJoc == 3) {
+            GinRummy.jugarGinRummy();
+        } else if (modalitatJoc == 4) {
+            RummyArgentino.jugarRummyArgentino();
+        }
+    }
+
+    public static void prepararPartida(){
+        establirNomsJugadors();
+        Baralla laMevaBaralla = new Baralla();
+        int nBaralles = Baralla.determinarQuantitatBaralles(modalitatJoc, numJugadors);
+        laMevaBaralla.inicialitzarBaralla(modalitatJoc, nBaralles);
+        laMevaBaralla.mesclarCartes();
+        repartirCartes(laMevaBaralla);
+    }
 
     public static void establirNomsJugadors() {
         for (int i = 0; i < arrayJugadors.length; i++) {
@@ -34,32 +56,13 @@ public class Joc {
         int numCartes = determinarCartesInicials(modalitatJoc, numJugadors);
 
         for (int i = 0; i < numCartes; i++) {
-
             for (int j = 0; j < arrayJugadors.length; j++) {
-
                 if (laMevaBaralla.baralla.size() > 0) {
-
                     Carta c = laMevaBaralla.baralla.get(0);
-
                     arrayJugadors[j].maCartes.add(c);
-
                     laMevaBaralla.baralla.remove(0);
                 }
             }
         }
-    }
-
-    public static void prepararPartida(){
-        establirNomsJugadors();
-
-        int nBaralles = Baralla.determinarQuantitatBaralles(modalitatJoc, numJugadors);
-        Baralla laMevaBaralla = new Baralla();
-        laMevaBaralla.inicialitzarBaralla(modalitatJoc, nBaralles);
-        laMevaBaralla.mesclarCartes();
-        repartirCartes(laMevaBaralla);
-    }
-
-    public void jugar(){
-        prepararPartida();
     }
 }
