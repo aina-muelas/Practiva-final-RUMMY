@@ -14,7 +14,7 @@ public class Consola {
     public static int triarModalitat() {
         int modalitat = 0;
         while (modalitat <= 0) {
-            System.out.println("Indica a quina modalitat vols jugar: '1': Rummy clàssic, '2': rummyKub GinRummy, '3': GinRummy, '4'; Rummy Argtenmtino");
+            System.out.println("Indica a quina modalitat vols jugar: '1': Rummy clàssic, '2': rummyKub, '3': GinRummy, '4'; Rummy Argtenmtino");
             modalitat = scanner.nextInt();
             scanner.nextLine();
             if (modalitat <= 0 || modalitat > 4) {

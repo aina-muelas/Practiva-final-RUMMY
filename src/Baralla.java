@@ -30,8 +30,8 @@ public class Baralla {
             }
         }
         if (modalitat != 3) {
-            baralla.add(new Carta(joker));
-            baralla.add(new Carta(joker));
+            baralla.add(new Carta(joker, "Comodí"));
+            baralla.add(new Carta(joker, "Comodí"));
         }
     }
 
@@ -43,8 +43,8 @@ public class Baralla {
                 }
             }
         }
-        baralla.add(new Carta(joker));
-        baralla.add(new Carta(joker));
+        baralla.add(new Carta(joker, "Comodí"));
+        baralla.add(new Carta(joker, "Comodí"));
     }
 
     static int determinarQuantitatBaralles(int modalitat, int numJugadors){
