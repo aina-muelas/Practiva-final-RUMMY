@@ -36,7 +36,7 @@ public class Consola {
                 }
             }
         } else if (modalitatTriada == 2) {
-            while (numJugadors < 2 || numJugadors > 6) {
+            while (numJugadors < 2 || numJugadors > 4) {
                 System.out.println("Introdueix el num de jugadors per al Rummikub, recorda: minim 2 i maxim 4");
                 numJugadors = scanner.nextInt();
                 scanner.nextLine();
@@ -93,4 +93,5 @@ public class Consola {
     public static void tornDe(String nom){ System.out.println("És el torn del jugador/a: " + nom); }
     public static void missatgeCartes(){ System.out.println("Les teves cartes actuals: "); }
     public static void missatgeDarreraRonda() { System.out.println("Atenció, estas a la darrera ronda de la partida"); }
+    public static void missatgeGuanyador(Jugador jugador) { System.out.println("Enhorabona " + jugador + " has guanyat!!!"); }
 }

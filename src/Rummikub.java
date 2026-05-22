@@ -42,12 +42,24 @@ public class Rummikub implements NormesBasiques {
     }
 
     public static boolean determinarGuanyador() {
-        return true; // falta implementar
+        int fitxesMinimes = Joc.arrayJugadors[0].getMaCartes().size();
+        Jugador jugadorGuanyador = Joc.arrayJugadors[0];
+
+        for (int i = 0; i < Joc.arrayJugadors.length -1; i++){
+            if (Joc.arrayJugadors[i].getMaCartes().size() < fitxesMinimes) {
+                fitxesMinimes = Joc.arrayJugadors[i].getMaCartes().size();
+                jugadorGuanyador = Joc.arrayJugadors[i];
+            } else if (Joc.arrayJugadors[i].getMaCartes().size() == fitxesMinimes) {
+
+            }
+        }
+        return true;
     }
 
     @Override
     public boolean haGuanyat(Jugador jugador){
         if (jugador.maCartes.isEmpty()){
+            Consola.missatgeGuanyador(jugador);
             return true;
         }
         return false;
