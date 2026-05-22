@@ -1,5 +1,5 @@
 public interface NormesBasiques {
-    public boolean haGuanyuat(Jugador jugador);
+    public boolean haGuanyat(Jugador jugador);
     public boolean esCombinacioValida();
 
 }

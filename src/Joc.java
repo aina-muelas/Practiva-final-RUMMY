@@ -2,7 +2,7 @@ public class Joc {
     static int modalitatJoc = Consola.triarModalitat();
     static int numJugadors = Consola.triarNumJugadors(modalitatJoc);
     static Jugador [] arrayJugadors = new Jugador [numJugadors];
-
+    public static Baralla barallaPartida;
     public void jugar(){
         prepararPartida();
 
@@ -19,11 +19,11 @@ public class Joc {
 
     public static void prepararPartida(){
         establirNomsJugadors();
-        Baralla laMevaBaralla = new Baralla();
+        barallaPartida = new Baralla();
         int nBaralles = Baralla.determinarQuantitatBaralles(modalitatJoc, numJugadors);
-        laMevaBaralla.inicialitzarBaralla(modalitatJoc, nBaralles);
-        laMevaBaralla.mesclarCartes();
-        repartirCartes(laMevaBaralla);
+        barallaPartida.inicialitzarBaralla(modalitatJoc, nBaralles);
+        barallaPartida.mesclarCartes();
+        repartirCartes(barallaPartida);
     }
 
     public static void establirNomsJugadors() {

@@ -67,4 +67,30 @@ public class Consola {
         return nom;
     }
 
+    public static void demanarAccio(Jugador jugadorActual) {
+        boolean accioCompletada = false;
+        while (!accioCompletada) {
+            System.out.println("Que vols fer??");
+            System.out.println("1. Robar una carta");
+            System.out.println("2. Crear o modificar combinacions de la taula");
+            System.out.println("Introdueix la teva opció: ");
+            int opcio = scanner.nextInt();
+
+            if (opcio == 1) {
+                if (!Joc.barallaPartida.baralla.isEmpty()) {
+                    Carta cartaRobada = Joc.barallaPartida.baralla.remove(0);
+                    jugadorActual.maCartes.add(cartaRobada);
+                    System.out.println("Has robat la carta: " + cartaRobada);
+                    accioCompletada = true;
+                } else {
+                    System.out.println("La baralla esta buida, tria una altre opció");
+                }
+            }
+        }
+    }
+    // comentaris
+    public static void espais(){ System.out.println("------------------------------------------------------------"); }
+    public static void tornDe(String nom){ System.out.println("És el torn del jugador/a: " + nom); }
+    public static void missatgeCartes(){ System.out.println("Les teves cartes actuals: "); }
+    public static void missatgeDarreraRonda() { System.out.println("Atenció, estas a la darrera ronda de la partida"); }
 }
