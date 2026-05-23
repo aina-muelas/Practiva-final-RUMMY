@@ -17,6 +17,10 @@ public class Carta {
         return "Joker".equals(this.numero);
     }
 
+    public int getValor() {
+        return valor;
+    }
+
     @Override
     public String toString() {
         if (esJoker()) {
