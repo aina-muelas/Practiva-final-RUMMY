@@ -21,6 +21,8 @@ public class Carta {
         return valor;
     }
 
+    public String getPalOColor(){ return palOColor; }
+
     @Override
     public String toString() {
         if (esJoker()) {
