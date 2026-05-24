@@ -11,6 +11,16 @@ public class Consola {
         }
     }
 
+    public static void mostrarTaulaComuna(ArrayList<ArrayList<Carta>> taula) {
+        if (taula.isEmpty()) {
+            System.out.println("La taula esta buida");
+            return;
+        }
+        for (int i = 0; i < taula.size(); i++) {
+            System.out.println("Combinació " + (i + 1) + ": "+ taula.get(i));
+        }
+    }
+
     public static int triarModalitat() {
         int modalitat = 0;
         while (modalitat <= 0) {
@@ -84,14 +94,55 @@ public class Consola {
     }
 
     public static ArrayList<ArrayList<Carta>> demanarNovesCombinacions(Jugador jugador) {
-        ArrayList<ArrayList<Carta>> combinacions = null;
-        return combinacions;
+        ArrayList<ArrayList<Carta>> totesCombinacions = new ArrayList<>();
+        ArrayList<Carta> maCartesJugador = new ArrayList<>(jugador.getMaCartes());;
+
+        boolean seguirCreant = true;
+
+        while (seguirCreant && !maCartesJugador.isEmpty()) {
+            ArrayList<Carta> combinacioNova = new ArrayList<>();
+            boolean combinacioAcabada = false;
+
+            while (!combinacioAcabada && !maCartesJugador.isEmpty()) {
+                System.out.println("Les teves cartes per fer la nova combinacio són les segÚents:");
+                mostrarBaralla(maCartesJugador);
+
+                System.out.println("Tria el número de carta que vols afegir a la combinació, posa 0 si vols finalitzar la combinació: ");
+                int opcio = scanner.nextInt();
+                scanner.nextLine();
+
+                if (opcio == 0) {
+                    combinacioAcabada = true;
+                } else if (opcio > 0 && opcio <= maCartesJugador.size()) {
+                    Carta cartaTriada = maCartesJugador.remove(opcio - 1);
+                    combinacioNova.add(cartaTriada);
+                    System.out.println("S'ha afegit la carta a la nova combinació");
+                } else {
+                    System.out.println("Número no vàlid, torna a intentar-ho");
+                }
+            }
+
+            if (!combinacioNova.isEmpty()) {
+                totesCombinacions.add(combinacioNova);
+                System.out.println("Combinació guardada de forma provisional");
+            }
+
+            if (!maCartesJugador.isEmpty()) {
+                System.out.println("Vols crear una nova combinació? )(s/n): ");
+                String resposta = scanner.nextLine().trim().toLowerCase();
+                if (!resposta.equals("s")) {
+                    seguirCreant = false;
+                }
+            }
+        }
+        return totesCombinacions;
     }
 
     // comentaris
     public static void espais(){ System.out.println("------------------------------------------------------------"); }
     public static void tornDe(String nom){ System.out.println("És el torn del jugador/a: " + nom); }
     // comentaris baralla / cartes
+    public static void missatgeMostrarTaula() { System.out.println("Les combinacions que hi ha a la taula són les següents:"); }
     public static void missatgeCartes(){ System.out.println("Les teves cartes actuals: "); }
     public static void mostrarCartaRobada(Carta cartaRobada) { System.out.println("Has robat la carta: " + cartaRobada); }
     public static void missatgeBarallaBuida() { System.out.println("La baralla esta buida, tria una altre opció"); }
@@ -99,7 +150,9 @@ public class Consola {
     public static void missatgePuntsMinimsTirar() { System.out.println("Encara no has tirat cap combinació. Recorda, minim 30 punts i no pots modificar cap combinació de la taula"); }
     public static void missatgeMinimPuntsIncorrecte(int punts) { System.out.println("Es la teva primera tirada, has de tirar MINIM 30 punts, i les teves combinacions fan: " + punts); }
     // missatge combinacions
+    public static void missatgeCombinacioValida() { System.out.println("Primera combinacio de 30 punts o més acceptada!"); }
     public static void missatgeCombinacioNoValida() { System.out.println("La teva combinacio no es valida"); }
+    public static void missatgeJugadaAcceptada() { System.out.println("Jugada acceptada i afegida a la taula"); }
     //missatges darrera ronda i guanyadors
     public static void missatgeDarreraRonda() { System.out.println("Atenció, estas a la darrera ronda de la partida"); }
     public static void missatgeGuanyador(Jugador jugador) { System.out.println("Enhorabona " + jugador + " has guanyat!!!"); }

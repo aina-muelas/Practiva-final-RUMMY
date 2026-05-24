@@ -11,6 +11,9 @@ public class Rummikub implements NormesBasiques {
         int tornsDarreraRonda = Joc.arrayJugadors.length;
 
         while (!hiHaGuanyador) {
+            Consola.missatgeMostrarTaula();
+            Consola.mostrarTaulaComuna(taulaComuna);
+
             boolean accioCompletada = false;
             int accio;
 
@@ -18,8 +21,8 @@ public class Rummikub implements NormesBasiques {
             Consola.tornDe(jugadorActual.nom);
             Consola.espais();
             Consola.missatgeCartes();
-            Consola.espais();
             Consola.mostrarBaralla(jugadorActual.maCartes);
+            Consola.espais();
 
             if (esDarreraRonda) {
                 Consola.missatgeDarreraRonda();
@@ -56,7 +59,7 @@ public class Rummikub implements NormesBasiques {
         }
     }
 
-    boolean agafarFitxa (Jugador jugador) {
+    boolean agafarFitxa(Jugador jugador) {
         if (!Joc.barallaPartida.baralla.isEmpty()) {
             Carta cartaRobada = Joc.barallaPartida.baralla.remove(0);
             jugador.maCartes.add(cartaRobada);
@@ -68,38 +71,58 @@ public class Rummikub implements NormesBasiques {
         return false;
     }
 
-    boolean tirarFitxes (Jugador jugador) {
+    boolean tirarFitxes(Jugador jugador) {
         ArrayList<ArrayList<Carta>> combinacionsNoves = Consola.demanarNovesCombinacions(jugador);
+
+        if (combinacionsNoves.isEmpty()) {
+            return false;
+        }
+
+        int puntsTotals = 0;
+        for (int i = 0; i < combinacionsNoves.size(); i++) {
+            ArrayList<Carta> combinacioActual = combinacionsNoves.get(i);
+
+            if (!esCombinacioValida(combinacioActual)) {
+                Consola.missatgeCombinacioNoValida();
+                return false;
+            }
+            puntsTotals += comptarPuntsCombinacio(combinacioActual);
+        }
 
         if (!jugador.haFetPrimeraTirada) {
             Consola.missatgePuntsMinimsTirar();
 
-            if (combinacionsNoves.isEmpty()) {
-                return false;
-            }
-
-            int puntsTotals = 0;
-            for (int i = 0; i < combinacionsNoves.size(); i++) {
-                ArrayList<Carta> combinacioActual = combinacionsNoves.get(i);
-
-                if (!esCombinacioValida(combinacioActual)) {
-                    Consola.missatgeCombinacioNoValida();
-                    return false;
-                }
-                puntsTotals += comptarPuntsCombinacio(combinacioActual);
-            }
-
             if (puntsTotals >= 30) {
                 jugador.haFetPrimeraTirada = true;
+                Consola.missatgeCombinacioValida();
+
                 for (int i = 0; i < combinacionsNoves.size(); i++) {
-                    taulaComuna.add(combinacionsNoves.get(i));
+                    ArrayList<Carta> combinacio = combinacionsNoves.get(i);
+                    taulaComuna.add(combinacio);
+
+                    for (int j = 0; j < combinacio.size(); j++) {
+                        Carta cartaEliminar = combinacio.get(j);
+                        jugador.maCartes.remove(cartaEliminar);
+                    }
                 }
                 return true;
             } else {
                 Consola.missatgeMinimPuntsIncorrecte(puntsTotals);
+                return false;
             }
+        } else {
+            Consola.missatgeJugadaAcceptada();
+            for (int i = 0; i < combinacionsNoves.size(); i++) {
+                ArrayList<Carta> combinacio = combinacionsNoves.get(i);
+                taulaComuna.add(combinacio);
+
+                for (int j = 0; j < combinacio.size(); j++) {
+                    Carta cartaELiminar = combinacio.get(j);
+                    jugador.maCartes.remove(cartaELiminar);
+                }
+            }
+            return true;
         }
-        return false;
     }
 
     boolean esGrupValid(ArrayList<Carta> combinacio) {
