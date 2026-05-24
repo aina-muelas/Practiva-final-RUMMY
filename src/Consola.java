@@ -69,14 +69,14 @@ public class Consola {
 
     public static int demanarAccio(Jugador jugadorActual) {
         int opcio = 0;
-        while (opcio != 1 || opcio != 2) {
+        while (opcio != 1 && opcio != 2) {
             System.out.println("Que vols fer??");
             System.out.println("1. Robar una carta");
             System.out.println("2. Crear o modificar combinacions de la taula");
             System.out.println("Introdueix la teva opció: ");
             opcio = scanner.nextInt();
 
-            if (opcio != 1 || opcio != 2) {
+            if (opcio != 1 && opcio != 2) {
                 System.out.println("Opció no vàlida, torna a triar");
             }
         }
