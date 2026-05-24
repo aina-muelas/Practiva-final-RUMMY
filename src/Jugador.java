@@ -4,6 +4,7 @@ public class Jugador {
     String nom;
     ArrayList<Carta> maCartes;
     int puntuacio;
+    boolean haFetPrimeraTirada = false;
 
     Jugador (String nom){
         this.nom = nom;
