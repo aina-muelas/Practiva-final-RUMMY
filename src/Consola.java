@@ -67,31 +67,40 @@ public class Consola {
         return nom;
     }
 
-    public static void demanarAccio(Jugador jugadorActual) {
-        boolean accioCompletada = false;
-        while (!accioCompletada) {
+    public static int demanarAccio(Jugador jugadorActual) {
+        int opcio = 0;
+        while (opcio != 1 || opcio != 2) {
             System.out.println("Que vols fer??");
             System.out.println("1. Robar una carta");
             System.out.println("2. Crear o modificar combinacions de la taula");
             System.out.println("Introdueix la teva opció: ");
-            int opcio = scanner.nextInt();
+            opcio = scanner.nextInt();
 
-            if (opcio == 1) {
-                if (!Joc.barallaPartida.baralla.isEmpty()) {
-                    Carta cartaRobada = Joc.barallaPartida.baralla.remove(0);
-                    jugadorActual.maCartes.add(cartaRobada);
-                    System.out.println("Has robat la carta: " + cartaRobada);
-                    accioCompletada = true;
-                } else {
-                    System.out.println("La baralla esta buida, tria una altre opció");
-                }
+            if (opcio != 1 || opcio != 2) {
+                System.out.println("Opció no vàlida, torna a triar");
             }
         }
+        return opcio;
     }
+
+    public static ArrayList<ArrayList<Carta>> demanarNovesCombinacions(Jugador jugador) {
+        ArrayList<ArrayList<Carta>> combinacions = null;
+        return combinacions;
+    }
+
     // comentaris
     public static void espais(){ System.out.println("------------------------------------------------------------"); }
     public static void tornDe(String nom){ System.out.println("És el torn del jugador/a: " + nom); }
+    // comentaris baralla / cartes
     public static void missatgeCartes(){ System.out.println("Les teves cartes actuals: "); }
+    public static void mostrarCartaRobada(Carta cartaRobada) { System.out.println("Has robat la carta: " + cartaRobada); }
+    public static void missatgeBarallaBuida() { System.out.println("La baralla esta buida, tria una altre opció"); }
+    // comentaris sobre els punts
+    public static void missatgePuntsMinimsTirar() { System.out.println("Encara no has tirat cap combinació. Recorda, minim 30 punts i no pots modificar cap combinació de la taula"); }
+    public static void missatgeMinimPuntsIncorrecte(int punts) { System.out.println("Es la teva primera tirada, has de tirar MINIM 30 punts, i les teves combinacions fan: " + punts); }
+    // missatge combinacions
+    public static void missatgeCombinacioNoValida() { System.out.println("La teva combinacio no es valida"); }
+    //missatges darrera ronda i guanyadors
     public static void missatgeDarreraRonda() { System.out.println("Atenció, estas a la darrera ronda de la partida"); }
     public static void missatgeGuanyador(Jugador jugador) { System.out.println("Enhorabona " + jugador + " has guanyat!!!"); }
 }

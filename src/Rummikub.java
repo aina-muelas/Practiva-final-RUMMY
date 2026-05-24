@@ -11,6 +11,9 @@ public class Rummikub implements NormesBasiques {
         int tornsDarreraRonda = Joc.arrayJugadors.length;
 
         while (!hiHaGuanyador) {
+            boolean accioCompletada = false;
+            int accio;
+
             Jugador jugadorActual = Joc.arrayJugadors[Torn.jugaActual];
             Consola.tornDe(jugadorActual.nom);
             Consola.espais();
@@ -22,7 +25,15 @@ public class Rummikub implements NormesBasiques {
                 Consola.missatgeDarreraRonda();
             }
 
-            Consola.demanarAccio(jugadorActual);
+            while (!accioCompletada) {
+                accio = Consola.demanarAccio(jugadorActual);
+
+                if (accio == 1) {
+                    accioCompletada = jocActual.agafarFitxa(jugadorActual);
+                } else if (accio == 2) {
+                    accioCompletada = jocActual.tirarFitxes(jugadorActual);
+                }
+            }
 
             hiHaGuanyador = jocActual.haGuanyat(jugadorActual);
 
@@ -41,10 +52,57 @@ public class Rummikub implements NormesBasiques {
             if (!hiHaGuanyador) {
                 Torn.calcularTorn(Joc.arrayJugadors.length);
             }
+
         }
     }
 
-    boolean esGrupValid(ArrayList<Carta> combinacio){
+    boolean agafarFitxa (Jugador jugador) {
+        if (!Joc.barallaPartida.baralla.isEmpty()) {
+            Carta cartaRobada = Joc.barallaPartida.baralla.remove(0);
+            jugador.maCartes.add(cartaRobada);
+            Consola.mostrarCartaRobada(cartaRobada);
+            return true;
+        } else {
+            Consola.missatgeBarallaBuida();
+        }
+        return false;
+    }
+
+    boolean tirarFitxes (Jugador jugador) {
+        ArrayList<ArrayList<Carta>> combinacionsNoves = Consola.demanarNovesCombinacions(jugador);
+
+        if (!jugador.haFetPrimeraTirada) {
+            Consola.missatgePuntsMinimsTirar();
+
+            if (combinacionsNoves.isEmpty()) {
+                return false;
+            }
+
+            int puntsTotals = 0;
+            for (int i = 0; i < combinacionsNoves.size(); i++) {
+                ArrayList<Carta> combinacioActual = combinacionsNoves.get(i);
+
+                if (!esCombinacioValida(combinacioActual)) {
+                    Consola.missatgeCombinacioNoValida();
+                    return false;
+                }
+                puntsTotals += comptarPuntsCombinacio(combinacioActual);
+            }
+
+            if (puntsTotals >= 30) {
+                jugador.haFetPrimeraTirada = true;
+                for (int i = 0; i < combinacionsNoves.size(); i++) {
+                    taulaComuna.add(combinacionsNoves.get(i));
+                }
+                return true;
+            } else {
+                Consola.missatgeMinimPuntsIncorrecte(puntsTotals);
+            }
+        }
+        return false;
+    }
+
+    boolean esGrupValid(ArrayList<Carta> combinacio) {
         if (combinacio.size() > 4) {
             return false;
         }
@@ -54,7 +112,7 @@ public class Rummikub implements NormesBasiques {
             for (int j = i + 1; j < combinacio.size(); j++) {
                 if (combinacio.get(j).esJoker()) continue;
 
-                if (combinacio.get(i).getValor() !=  combinacio.get(j).getValor()) {
+                if (combinacio.get(i).getValor() != combinacio.get(j).getValor()) {
                     return false;
                 }
                 if (combinacio.get(i).getPalOColor().equals(combinacio.get(j).getPalOColor())) {
@@ -74,48 +132,48 @@ public class Rummikub implements NormesBasiques {
             break;
         }
 
-            for (int j = 0; j < combinacio.size(); j++) {
-                if (combinacio.get(j).esJoker()) continue;
+        for (int j = 0; j < combinacio.size(); j++) {
+            if (combinacio.get(j).esJoker()) continue;
 
-                if (!combinacio.get(j).getPalOColor().equals(colorEscala)) {
+            if (!combinacio.get(j).getPalOColor().equals(colorEscala)) {
+                return false;
+            }
+        }
+
+        int indexPrimeraFitxaReal = -1;
+        for (int i = 0; i < combinacio.size(); i++) {
+            if (combinacio.get(i).esJoker()) continue;
+
+            if (indexPrimeraFitxaReal == -1) {
+                indexPrimeraFitxaReal = i;
+            } else {
+                int valorActual = combinacio.get(i).getValor();
+                int valorAnterior = combinacio.get(indexPrimeraFitxaReal).getValor();
+
+                int diferenciaValors = valorActual - valorAnterior;
+                int diferenciaPosicions = i - indexPrimeraFitxaReal;
+
+                if (diferenciaValors != diferenciaPosicions) {
                     return false;
                 }
             }
-
-            int indexPrimeraFitxaReal = -1;
-             for (int i = 0; i < combinacio.size(); i++) {
-                 if (combinacio.get(i).esJoker()) continue;
-
-                 if (indexPrimeraFitxaReal == -1) {
-                     indexPrimeraFitxaReal = i;
-                 } else {
-                     int valorActual = combinacio.get(i).getValor();
-                     int valorAnterior = combinacio.get(indexPrimeraFitxaReal).getValor();
-
-                     int diferenciaValors = valorActual - valorAnterior;
-                     int diferenciaPosicions = i - indexPrimeraFitxaReal;
-
-                     if (diferenciaValors != diferenciaPosicions) {
-                         return false;
-                     }
-                 }
-             }
+        }
 
         return true;
     }
 
-    public static boolean determinarGuanyador() {
+    static boolean determinarGuanyador() {
         int fitxesMinimes = Joc.arrayJugadors[0].getMaCartes().size();
         Jugador jugadorGuanyador = Joc.arrayJugadors[0];
-        int puntsMinims = comptarPunts(Joc.arrayJugadors[0]);
+        int puntsMinims = comptarPuntsCasEmpat(Joc.arrayJugadors[0]);
 
         for (int i = 1; i < Joc.arrayJugadors.length; i++) {
             if (Joc.arrayJugadors[i].getMaCartes().size() < fitxesMinimes) {
                 fitxesMinimes = Joc.arrayJugadors[i].getMaCartes().size();
                 jugadorGuanyador = Joc.arrayJugadors[i];
-                puntsMinims = comptarPunts(Joc.arrayJugadors[i]);
+                puntsMinims = comptarPuntsCasEmpat(Joc.arrayJugadors[i]);
             } else if (Joc.arrayJugadors[i].getMaCartes().size() == fitxesMinimes) {
-                int puntsJugadorActual = comptarPunts(Joc.arrayJugadors[i]);
+                int puntsJugadorActual = comptarPuntsCasEmpat(Joc.arrayJugadors[i]);
                 if (puntsJugadorActual < puntsMinims) {
                     jugadorGuanyador = Joc.arrayJugadors[i];
                     puntsMinims = puntsJugadorActual;
@@ -126,7 +184,7 @@ public class Rummikub implements NormesBasiques {
         return true;
     }
 
-    public static int comptarPunts(Jugador jugador) {
+    static int comptarPuntsCasEmpat(Jugador jugador) {
         int numPunts = 0;
         Carta cartaActual;
         for (int i = 0; i < jugador.maCartes.size(); i++) {
@@ -138,6 +196,36 @@ public class Rummikub implements NormesBasiques {
             }
         }
         return numPunts;
+    }
+
+    int comptarPuntsCombinacio(ArrayList<Carta> combinacio) {
+        int punts = 0;
+        boolean esGrup = esGrupValid(combinacio);
+        boolean esEscala = esEscalaValida(combinacio);
+
+        int indexFitxaReal = -1;
+        int valorFitxaReal = 0;
+
+        for (int i = 0; i < combinacio.size(); i++) {
+            if (!combinacio.get(i).esJoker()) {
+                indexFitxaReal = i;
+                valorFitxaReal = combinacio.get(i).getValor();
+                break;
+            }
+        }
+
+        for (int i = 0; i < combinacio.size(); i++) {
+            if (!combinacio.get(i).esJoker()) {
+                punts += combinacio.get(i).getValor();
+            } else {
+                if (esGrup) {
+                    punts += valorFitxaReal;
+                } else if (esEscala) {
+                    punts += valorFitxaReal + (i - indexFitxaReal);
+                }
+            }
+        }
+        return punts;
     }
 
     @Override
@@ -152,8 +240,7 @@ public class Rummikub implements NormesBasiques {
     public boolean esCombinacioValida(ArrayList<Carta> combinacio) {
         if (combinacio == null || combinacio.size() < 3) {
             return false;
-        }
-        else if (esGrupValid(combinacio) || esEscalaValida(combinacio)){
+        } else if (esGrupValid(combinacio) || esEscalaValida(combinacio)) {
             return true;
         }
         return false;
