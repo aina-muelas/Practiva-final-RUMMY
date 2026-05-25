@@ -73,26 +73,38 @@ public class Rummikub extends Normes {
 
     boolean tirarFitxes(Jugador jugador) {
         boolean seguirCreant = true;
-
-        ArrayList<ArrayList<Carta>> combinacionsNoves = Consola.demanarNovesCombinacions(jugador);
-
-        if (combinacionsNoves.isEmpty()) {
-            return false;
-        }
-
+        ArrayList<ArrayList<Carta>> combinacionsNoves = new ArrayList<ArrayList<Carta>>();
         int puntsTotals = 0;
-        for (int i = 0; i < combinacionsNoves.size(); i++) {
-            ArrayList<Carta> combinacioActual = combinacionsNoves.get(i);
 
-            if (!esCombinacioValida(combinacioActual)) {
-                Consola.missatgeCombinacioNoValida();
+        while (seguirCreant && !jugador.getMaCartes().isEmpty()) {
+            ArrayList<Carta> combinacioNova = Consola.demanarNovaCombinacio(jugador);
+
+            if (combinacioNova.isEmpty()) {
                 return false;
             }
-            puntsTotals += comptarPuntsCombinacio(combinacioActual);
+
+            if (!esCombinacioValida(combinacioNova)) {
+                Consola.missatgeCombinacioNoValida();
+                return false;
+            } else {
+                combinacionsNoves.add(combinacioNova);
+                taulaComuna.add(combinacioNova);
+
+                for (int j = 0; j < combinacioNova.size(); j++) {
+                    Carta cartaELiminar = combinacioNova.get(j);
+                    jugador.maCartes.remove(cartaELiminar);
+                }
+            }
+            seguirCreant = Consola.seguirCreantCombinacions(jugador);
         }
 
         if (!jugador.haFetPrimeraTirada) {
             Consola.missatgePuntsMinimsTirar();
+
+            for (int i = 0; i < combinacionsNoves.size(); i++) {
+                ArrayList<Carta> combinacioActual = combinacionsNoves.get(i);
+                puntsTotals += comptarPuntsCombinacio(combinacioActual);
+            }
 
             if (puntsTotals >= 30) {
                 jugador.haFetPrimeraTirada = true;
@@ -101,15 +113,21 @@ public class Rummikub extends Normes {
                 for (int i = 0; i < combinacionsNoves.size(); i++) {
                     ArrayList<Carta> combinacio = combinacionsNoves.get(i);
                     taulaComuna.add(combinacio);
-
-                    for (int j = 0; j < combinacio.size(); j++) {
-                        Carta cartaEliminar = combinacio.get(j);
-                        jugador.maCartes.remove(cartaEliminar);
-                    }
                 }
                 return true;
             } else {
+                // fer el remove de les combinacions afegides d'aquest jugador
                 Consola.missatgeMinimPuntsIncorrecte(puntsTotals);
+
+                for (int i = 0; i < combinacionsNoves.size(); i++) {
+                    ArrayList<Carta> combinacio = combinacionsNoves.get(i);
+                    taulaComuna.add(combinacio);
+
+                    for (int j = 0; j < combinacio.size(); j++) {
+                        Carta cartaAfegir = combinacio.get(j);
+                        jugador.maCartes.add(cartaAfegir);
+                    }
+                }
                 return false;
             }
         } else {
@@ -117,11 +135,6 @@ public class Rummikub extends Normes {
             for (int i = 0; i < combinacionsNoves.size(); i++) {
                 ArrayList<Carta> combinacio = combinacionsNoves.get(i);
                 taulaComuna.add(combinacio);
-
-                for (int j = 0; j < combinacio.size(); j++) {
-                    Carta cartaELiminar = combinacio.get(j);
-                    jugador.maCartes.remove(cartaELiminar);
-                }
             }
             return true;
         }
