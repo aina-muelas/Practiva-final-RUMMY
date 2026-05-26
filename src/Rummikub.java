@@ -11,8 +11,10 @@ public class Rummikub extends Normes {
         int tornsDarreraRonda = Joc.arrayJugadors.length;
 
         while (!hiHaGuanyador) {
+            Consola.espais();
             Consola.missatgeMostrarTaula();
             Consola.mostrarTaulaComuna(taulaComuna);
+            Consola.espais();
 
             boolean accioCompletada = false;
             int accio;
@@ -29,12 +31,20 @@ public class Rummikub extends Normes {
             }
 
             while (!accioCompletada) {
+                Consola.imprimirNumFitxesBaralla(Joc.barallaPartida.baralla);
+                Consola.espais();
                 accio = Consola.demanarAccio(jugadorActual);
 
                 if (accio == 1) {
                     accioCompletada = jocActual.agafarFitxa(jugadorActual);
                 } else if (accio == 2) {
                     accioCompletada = jocActual.tirarFitxes(jugadorActual);
+                } else if (accio == 3) {
+                    if (jugadorActual.haFetPrimeraTirada) {
+                        accioCompletada = jocActual.modificarTaula(jugadorActual);
+                    } else {
+                        Consola.missatgeModificacioNoPossible();
+                    }
                 }
             }
 
@@ -72,6 +82,8 @@ public class Rummikub extends Normes {
     }
 
     boolean tirarFitxes(Jugador jugador) {
+        ArrayList<Carta> copiaMaInicial = new ArrayList<>(jugador.getMaCartes());
+
         boolean seguirCreant = true;
         ArrayList<ArrayList<Carta>> combinacionsNoves = new ArrayList<ArrayList<Carta>>();
         int puntsTotals = 0;
@@ -80,26 +92,25 @@ public class Rummikub extends Normes {
             ArrayList<Carta> combinacioNova = Consola.demanarNovaCombinacio(jugador);
 
             if (combinacioNova.isEmpty()) {
-                return false;
+                break;
             }
 
             if (!esCombinacioValida(combinacioNova)) {
                 Consola.missatgeCombinacioNoValida();
-                return false;
+                jugador.maCartes.addAll(combinacioNova);
             } else {
                 combinacionsNoves.add(combinacioNova);
-                taulaComuna.add(combinacioNova);
-
-                for (int j = 0; j < combinacioNova.size(); j++) {
-                    Carta cartaELiminar = combinacioNova.get(j);
-                    jugador.maCartes.remove(cartaELiminar);
-                }
             }
             seguirCreant = Consola.seguirCreantCombinacions(jugador);
         }
 
+        if (combinacionsNoves.isEmpty()) {
+            jugador.maCartes.clear();
+            jugador.maCartes.addAll(copiaMaInicial);
+            return false;
+        }
+
         if (!jugador.haFetPrimeraTirada) {
-            Consola.missatgePuntsMinimsTirar();
 
             for (int i = 0; i < combinacionsNoves.size(); i++) {
                 ArrayList<Carta> combinacioActual = combinacionsNoves.get(i);
@@ -116,18 +127,10 @@ public class Rummikub extends Normes {
                 }
                 return true;
             } else {
-                // fer el remove de les combinacions afegides d'aquest jugador
                 Consola.missatgeMinimPuntsIncorrecte(puntsTotals);
 
-                for (int i = 0; i < combinacionsNoves.size(); i++) {
-                    ArrayList<Carta> combinacio = combinacionsNoves.get(i);
-                    taulaComuna.add(combinacio);
-
-                    for (int j = 0; j < combinacio.size(); j++) {
-                        Carta cartaAfegir = combinacio.get(j);
-                        jugador.maCartes.add(cartaAfegir);
-                    }
-                }
+                jugador.maCartes.clear();
+                jugador.maCartes.addAll(copiaMaInicial);
                 return false;
             }
         } else {
@@ -138,6 +141,119 @@ public class Rummikub extends Normes {
             }
             return true;
         }
+    }
+
+    boolean modificarTaula(Jugador jugador) {
+        ArrayList<Carta> copiaMaInicial = new ArrayList<>(jugador.getMaCartes());
+        ArrayList<ArrayList<Carta>> copiaTaulaInicial = new ArrayList<>();
+
+        for (int i = 0; i < taulaComuna.size(); i++) {
+            ArrayList<Carta> combinacioActu = new ArrayList<>(taulaComuna.get(i));
+            copiaTaulaInicial.add(combinacioActu);
+        }
+
+        int numCartesMaJugador = jugador.maCartes.size();
+        boolean seguirModificant = true;
+
+        while (seguirModificant && !jugador.maCartes.isEmpty()) {
+            Consola.espais();
+            Consola.missatgeMostrarTaula();
+            Consola.mostrarTaulaComuna(taulaComuna);
+            Consola.espais();
+            Consola.missatgeCartes();
+            Consola.mostrarBaralla(jugador.maCartes);
+            Consola.espais();
+
+            int opcio = Consola.demanarQueModificar(jugador);
+
+            if (opcio == 0) {
+                seguirModificant = false;
+            } else if (opcio == 1) {
+                afegirFitxaCombinacio(jugador);
+            } else if (opcio == 2) {
+                moureFitxaEntreCombinacions();
+            }
+        }
+
+        for (int i = 0; i < taulaComuna.size(); i++) {
+            if (!esCombinacioValida(taulaComuna.get(i))) {
+                Consola.missatgeModificacioNoValida();
+                jugador.maCartes.clear();
+                jugador.maCartes.addAll(copiaMaInicial);
+                taulaComuna.clear();
+                taulaComuna.addAll(copiaTaulaInicial);
+                return false;
+            }
+        }
+
+        if (jugador.maCartes.size() >= numCartesMaJugador) {
+            Consola.missatgeMinimTirarUnaCarta();
+            jugador.maCartes.clear();
+            jugador.maCartes.addAll(copiaMaInicial);
+            taulaComuna.clear();
+            taulaComuna.addAll(copiaTaulaInicial);
+            return false;
+        }
+
+        Consola.missatgeModificacioValida();
+        return true;
+    }
+
+    private void afegirFitxaCombinacio(Jugador jugador) {
+        int indexCarta = Consola.demanarIndexCarta(jugador.maCartes);
+        if (indexCarta < 0 || indexCarta >= jugador.maCartes.size()) {
+            Consola.missatgeIndexNoValid();
+            return;
+        }
+
+        int indexCombinacio = Consola.demanarIndexCombinacio(taulaComuna);
+        if (indexCombinacio < 0 || indexCombinacio >= taulaComuna.size()) {
+            Consola.missatgeIndexNoValid();
+            return;
+        }
+
+        ArrayList<Carta> combinacio = taulaComuna.get(indexCombinacio);
+        int indexPosicio = Consola.demanarPosicioDinsCombiancio(combinacio);
+        if (indexPosicio < 0 || indexPosicio > combinacio.size()) {
+            Consola.missatgePosicioNoValida();
+            return;
+        }
+
+        Carta carta = jugador.maCartes.get(indexCarta);
+        jugador.maCartes.remove(indexCarta);
+        combinacio.add(indexPosicio, carta);
+        Consola.missatgeCartaAfegida(indexPosicio, indexCombinacio);
+    }
+
+    private void moureFitxaEntreCombinacions() {
+        int indexOrigen = Consola.demanarIndexCombinacio(taulaComuna);
+        if (indexOrigen < 0 || indexOrigen >= taulaComuna.size()){
+            Consola.missatgeIndexNoValid();
+            return;
+        }
+
+        int indexCarta = Consola.demanarIndexCarta(taulaComuna.get(indexOrigen));
+        if (indexCarta < 0 || indexCarta >= taulaComuna.get(indexOrigen).size()) {
+            Consola.missatgeIndexNoValid();
+            return;
+        }
+
+        int indexDesti = Consola.demanarIndexCombinacio(taulaComuna);
+        if (indexDesti < 0 || indexDesti >= taulaComuna.size() || indexDesti == indexOrigen){
+            Consola.missatgeIndexNoValid();
+            return;
+        }
+
+        ArrayList<Carta> combinacioDesti = taulaComuna.get(indexDesti);
+        int indexPosicio = Consola.demanarPosicioDinsCombiancio(combinacioDesti);
+        if (indexPosicio < 0 || indexPosicio > combinacioDesti.size()) {
+            Consola.missatgePosicioNoValida();
+            return;
+        }
+
+        Carta carta = taulaComuna.get(indexOrigen).remove(indexCarta);
+        combinacioDesti.add(indexPosicio, carta);
+        Consola.missatgeCartaAfegida(indexPosicio, indexDesti);
     }
 
     static boolean determinarGuanyador() {
