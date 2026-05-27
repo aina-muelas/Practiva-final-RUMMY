@@ -130,6 +130,7 @@ public class Consola {
         System.out.println("Que vols fer?");
         System.out.println("1. Afegir una carta de la teva mà a una combinació");
         System.out.println("2. Moure una carta d'una combinació a una altra");
+        System.out.println("3. Moure una carta d'una combinació a una nova");
         System.out.println("0. Sortir/acabar modificacions");
         int opcio = Consola.scanner.nextInt();
         Consola.scanner.nextLine();

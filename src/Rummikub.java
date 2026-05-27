@@ -172,6 +172,8 @@ public class Rummikub extends Normes {
                 afegirFitxaCombinacio(jugador);
             } else if (opcio == 2) {
                 moureFitxaEntreCombinacions();
+            } else if (opcio == 3) {
+                moureFitxaNovaCombinacio();
             }
         }
 
@@ -254,6 +256,40 @@ public class Rummikub extends Normes {
         Carta carta = taulaComuna.get(indexOrigen).remove(indexCarta);
         combinacioDesti.add(indexPosicio, carta);
         Consola.missatgeCartaAfegida(indexPosicio, indexDesti);
+    }
+
+    private void moureFitxaNovaCombinacio() {
+        int indexOrigen = Consola.demanarIndexCombinacio(taulaComuna);
+        if (indexOrigen < 0 || indexOrigen >= taulaComuna.size()){
+            Consola.missatgeIndexNoValid();
+            return;
+        }
+
+        int indexCarta = Consola.demanarIndexCarta(taulaComuna.get(indexOrigen));
+        if (indexCarta < 0 || indexCarta >= taulaComuna.get(indexOrigen).size()) {
+            Consola.missatgeIndexNoValid();
+            return;
+        }
+
+        ArrayList<Carta> indexNou = new ArrayList<>();
+        taulaComuna.add(indexNou);
+
+        ArrayList<Carta> indexDesti = taulaComuna.getLast();
+        int posDarrerIndex = taulaComuna.size();
+
+
+            ArrayList<Carta> combinacioDesti = indexDesti;
+            int indexPosicio = Consola.demanarPosicioDinsCombiancio(combinacioDesti);
+            if (indexPosicio < 0 || indexPosicio > combinacioDesti.size()) {
+                Consola.missatgePosicioNoValida();
+                return;
+
+            }
+
+            Carta carta = taulaComuna.get(indexOrigen).remove(indexCarta);
+            combinacioDesti.add(indexPosicio, carta);
+            Consola.missatgeCartaAfegida(indexPosicio, posDarrerIndex);
+
     }
 
     static boolean determinarGuanyador() {
