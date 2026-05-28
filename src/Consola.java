@@ -196,7 +196,7 @@ public class Consola {
     public static void missatgeModificacioNoPossible() { System.out.println("No pots modificar la taula, recorda que per poder fer-ho has d'haver fet la primera jugada de minim 30 punts"); }
     //missatges darrera ronda i guanyadors
     public static void missatgeDarreraRonda() { System.out.println("Atenció, estas a la darrera ronda de la partida"); }
-    public static void missatgeGuanyador(Jugador jugador) { System.out.println("Enhorabona " + jugador + " has guanyat!!!"); }
+    public static void missatgeGuanyador(Jugador jugador) { System.out.println("Enhorabona " + jugador.nom + " has guanyat!!!"); }
     // altres
     public static void missatgeMinimTirarUnaCarta() { System.out.println("Has de tirar almenys una carta de la teva mà per completar el torn"); }
 

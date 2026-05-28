@@ -25,6 +25,7 @@ public class Rummikub extends Normes {
             Consola.tornDe(jugadorActual.nom);
             Consola.espais();
             Consola.missatgeCartes();
+            ordenarCartes(jugadorActual.maCartes);
             Consola.mostrarBaralla(jugadorActual.maCartes);
             Consola.espais();
 
@@ -75,9 +76,7 @@ public class Rummikub extends Normes {
 
             if (!hiHaGuanyador && Joc.barallaPartida.baralla.isEmpty() && !esDarreraRonda) {
                 esDarreraRonda = true;
-            }
-
-            if (esDarreraRonda & !hiHaGuanyador) {
+            } else if (esDarreraRonda & !hiHaGuanyador) {
                 tornsDarreraRonda--;
 
                 if (tornsDarreraRonda == 0) {
@@ -113,14 +112,16 @@ public class Rummikub extends Normes {
 
         while (seguirCreant && !jugador.getMaCartes().isEmpty()) {
             ArrayList<Carta> combinacioNova = Consola.demanarNovaCombinacio(jugador);
-
             if (combinacioNova.isEmpty()) {
                 break;
             }
 
+            combinacioNova = Normes.ordenarCombinacions(combinacioNova);
+
             if (!esCombinacioValida(combinacioNova)) {
                 Consola.missatgeCombinacioNoValida();
                 jugador.maCartes.addAll(combinacioNova);
+                ordenarCartes(jugador.maCartes);
             } else {
                 combinacionsNoves.add(combinacioNova);
             }
