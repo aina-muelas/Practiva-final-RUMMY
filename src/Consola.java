@@ -79,15 +79,16 @@ public class Consola {
 
     public static int demanarAccio(Jugador jugadorActual) {
         int opcio = 0;
-        while (opcio != 1 && opcio != 2 && opcio != 3) {
+        while (opcio != 1 && opcio != 2 && opcio != 3 && opcio!= 4) {
             System.out.println("Que vols fer??");
             System.out.println("1. Robar una carta");
             System.out.println("2. Crear/afegir noves combinacions a la taula");
             System.out.println("3. Modificar combinacions de la taula (només si ja has fet la primera tirada de min 30 punts)");
+            System.out.println("4. Finalitzar torn (només si ja has fet una de les accions anteriors, o no queden mes fitxes a la baralla)");
             System.out.println("Introdueix la teva opció: ");
             opcio = scanner.nextInt();
 
-            if (opcio != 1 && opcio != 2 && opcio != 3) {
+            if (opcio != 1 && opcio != 2 && opcio != 3 && opcio != 4) {
                 System.out.println("Opció no vàlida, torna a triar");
             }
         }
@@ -184,7 +185,6 @@ public class Consola {
     public static void missatgeBarallaBuida() { System.out.println("La baralla esta buida, tria una altre opció"); }
     public static void imprimirNumFitxesBaralla(ArrayList<Carta> baralla) { System.out.println("A la baralla queden " + baralla.size() + " fitxes"); }
     // comentaris sobre els punts
-    public static void missatgePuntsMinimsTirar() { System.out.println("Encara no has tirat cap combinació. Recorda, minim 30 punts i no pots modificar cap combinació de la taula"); }
     public static void missatgeMinimPuntsIncorrecte(int punts) { System.out.println("Es la teva primera tirada, has de tirar MINIM 30 punts, i les teves combinacions fan: " + punts); }
     // missatge combinacions
     public static void missatgeCombinacioValida() { System.out.println("Primera combinacio de 30 punts o més acceptada!"); }
@@ -199,10 +199,12 @@ public class Consola {
     public static void missatgeGuanyador(Jugador jugador) { System.out.println("Enhorabona " + jugador + " has guanyat!!!"); }
     // altres
     public static void missatgeMinimTirarUnaCarta() { System.out.println("Has de tirar almenys una carta de la teva mà per completar el torn"); }
-    public static void missatgeMaBuida() { System.out.println("No tens cartes a la mà"); }
 
     public static void missatgeIndexNoValid() { System.out.println("l'índex triat no es vàlid"); }
     public static void missatgePosicioNoValida() { System.out.println("la posicio triada no es vàlida"); }
     public static void missatgeCartaAfegida(int indexPosicio, int indexCombinacio) { System.out.println("Carta afegida a la posició " + (indexPosicio + 1) + " de la combinació " + (indexCombinacio + 1)); }
+
+    public static void missatgeAccio1RummikubNoValida() { System.out.println("No es pot agafar una carta, ja has modificat el tauler o no hi ha fitxes a la baralla"); }
+    public static void missatgeAccio4RummikubNoValida() { System.out.println("No es pots finalitzar el torn, has de modificar/afegir combinacions o agafar una fitxa"); }
 
 }

@@ -6,6 +6,7 @@ public class Rummikub extends Normes {
     public static void jugarRummiKub() {
         Rummikub jocActual = new Rummikub();
 
+        boolean primerTornAcabat = false;
         boolean hiHaGuanyador = false;
         boolean esDarreraRonda = false;
         int tornsDarreraRonda = Joc.arrayJugadors.length;
@@ -16,6 +17,7 @@ public class Rummikub extends Normes {
             Consola.mostrarTaulaComuna(taulaComuna);
             Consola.espais();
 
+            boolean haTocatTauler = false;
             boolean accioCompletada = false;
             int accio;
 
@@ -26,6 +28,9 @@ public class Rummikub extends Normes {
             Consola.mostrarBaralla(jugadorActual.maCartes);
             Consola.espais();
 
+            if (jugadorActual.haFetPrimeraTirada) {
+                primerTornAcabat = true;
+            }
             if (esDarreraRonda) {
                 Consola.missatgeDarreraRonda();
             }
@@ -33,17 +38,35 @@ public class Rummikub extends Normes {
             while (!accioCompletada) {
                 Consola.imprimirNumFitxesBaralla(Joc.barallaPartida.baralla);
                 Consola.espais();
+
+                boolean barallabuida = Joc.barallaPartida.baralla.isEmpty();
                 accio = Consola.demanarAccio(jugadorActual);
 
                 if (accio == 1) {
-                    accioCompletada = jocActual.agafarFitxa(jugadorActual);
+                    if (!haTocatTauler && !barallabuida) {
+                        accioCompletada = jocActual.agafarFitxa(jugadorActual);
+                    } else {
+                        Consola.missatgeAccio1RummikubNoValida();
+                    }
                 } else if (accio == 2) {
-                    accioCompletada = jocActual.tirarFitxes(jugadorActual);
+                    boolean tiradaFeta = jocActual.tirarFitxes(jugadorActual);
+                    if (tiradaFeta) {
+                        haTocatTauler = true;
+                    }
                 } else if (accio == 3) {
-                    if (jugadorActual.haFetPrimeraTirada) {
-                        accioCompletada = jocActual.modificarTaula(jugadorActual);
+                    if (jugadorActual.haFetPrimeraTirada && primerTornAcabat) {
+                        boolean modificacioFeta = jocActual.modificarTaula(jugadorActual);
+                        if (modificacioFeta) {
+                            haTocatTauler = true;
+                        }
                     } else {
                         Consola.missatgeModificacioNoPossible();
+                    }
+                } else if (accio == 4) {
+                    if (haTocatTauler || barallabuida) {
+                        accioCompletada = true;
+                    } else {
+                        Consola.missatgeAccio4RummikubNoValida();
                     }
                 }
             }
@@ -229,7 +252,7 @@ public class Rummikub extends Normes {
 
     private void moureFitxaEntreCombinacions() {
         int indexOrigen = Consola.demanarIndexCombinacio(taulaComuna);
-        if (indexOrigen < 0 || indexOrigen >= taulaComuna.size()){
+        if (indexOrigen < 0 || indexOrigen >= taulaComuna.size()) {
             Consola.missatgeIndexNoValid();
             return;
         }
@@ -241,7 +264,7 @@ public class Rummikub extends Normes {
         }
 
         int indexDesti = Consola.demanarIndexCombinacio(taulaComuna);
-        if (indexDesti < 0 || indexDesti >= taulaComuna.size() || indexDesti == indexOrigen){
+        if (indexDesti < 0 || indexDesti >= taulaComuna.size() || indexDesti == indexOrigen) {
             Consola.missatgeIndexNoValid();
             return;
         }
@@ -256,11 +279,15 @@ public class Rummikub extends Normes {
         Carta carta = taulaComuna.get(indexOrigen).remove(indexCarta);
         combinacioDesti.add(indexPosicio, carta);
         Consola.missatgeCartaAfegida(indexPosicio, indexDesti);
+
+        if (taulaComuna.get(indexOrigen).size() == 0) {
+            taulaComuna.remove(indexOrigen);
+        }
     }
 
     private void moureFitxaNovaCombinacio() {
         int indexOrigen = Consola.demanarIndexCombinacio(taulaComuna);
-        if (indexOrigen < 0 || indexOrigen >= taulaComuna.size()){
+        if (indexOrigen < 0 || indexOrigen >= taulaComuna.size()) {
             Consola.missatgeIndexNoValid();
             return;
         }
@@ -277,19 +304,15 @@ public class Rummikub extends Normes {
         ArrayList<Carta> indexDesti = taulaComuna.getLast();
         int posDarrerIndex = taulaComuna.size();
 
+        ArrayList<Carta> combinacioDesti = indexDesti;
 
-            ArrayList<Carta> combinacioDesti = indexDesti;
-            int indexPosicio = Consola.demanarPosicioDinsCombiancio(combinacioDesti);
-            if (indexPosicio < 0 || indexPosicio > combinacioDesti.size()) {
-                Consola.missatgePosicioNoValida();
-                return;
+        Carta carta = taulaComuna.get(indexOrigen).remove(indexCarta);
+        combinacioDesti.add(carta);
+        Consola.missatgeCartaAfegida(0, posDarrerIndex);
 
-            }
-
-            Carta carta = taulaComuna.get(indexOrigen).remove(indexCarta);
-            combinacioDesti.add(indexPosicio, carta);
-            Consola.missatgeCartaAfegida(indexPosicio, posDarrerIndex);
-
+        if (taulaComuna.get(indexOrigen).size() == 0) {
+            taulaComuna.remove(indexOrigen);
+        }
     }
 
     static boolean determinarGuanyador() {
