@@ -175,7 +175,22 @@ public class Consola {
         return true;
     }
 
-    // comentaris
+    public static int demanarDonAgafar () {
+        int opcio = 0;
+
+        while(opcio != 1 && opcio != 2) {
+            System.out.println("Tria d'on vols agafar la carta: 1.Baralla, 2.Pila Descartades");
+            opcio = scanner.nextInt();
+            scanner.nextLine();
+
+            if (opcio != 1 && opcio != 2) {
+                System.out.println("Opció no vàlida, torna a triar");
+            }
+        }
+        return opcio;
+    }
+
+    // comentaris comuns a totes les modalitats
     public static void espais() { System.out.println("------------------------------------------------------------"); }
     public static void tornDe(String nom) { System.out.println("És el torn del jugador/a: " + nom); }
     // comentaris baralla / cartes
@@ -185,21 +200,16 @@ public class Consola {
     public static void missatgeBarallaBuida() { System.out.println("La baralla esta buida, tria una altre opció"); }
     public static void imprimirNumFitxesBaralla(ArrayList<Carta> baralla) { System.out.println("A la baralla queden " + baralla.size() + " fitxes"); }
     // comentaris sobre els punts
-    public static void missatgeMinimPuntsIncorrecte(int punts) { System.out.println("Es la teva primera tirada, has de tirar MINIM 30 punts, i les teves combinacions fan: " + punts); }
     // missatge combinacions
-    public static void missatgeCombinacioValida() { System.out.println("Primera combinacio de 30 punts o més acceptada!"); }
     public static void missatgeCombinacioNoValida() { System.out.println("La teva combinacio no es valida"); }
     public static void missatgeJugadaAcceptada() { System.out.println("Jugada acceptada i afegida a la taula"); }
     // missatges combinacions
     public static void missatgeModificacioNoValida() { System.out.println("Les modificacions no són vàlides, es restaura l'estat anterior"); }
     public static void missatgeModificacioValida() { System.out.println("Les modificacions són vàlides, es guardara el nou estat"); }
-    public static void missatgeModificacioNoPossible() { System.out.println("No pots modificar la taula, recorda que per poder fer-ho has d'haver fet la primera jugada de minim 30 punts"); }
-    //missatges darrera ronda i guanyadors
-    public static void missatgeDarreraRonda() { System.out.println("Atenció, estas a la darrera ronda de la partida"); }
+    //missatges guanyadors
     public static void missatgeGuanyador(Jugador jugador) { System.out.println("Enhorabona " + jugador.nom + " has guanyat!!!"); }
     // altres
     public static void missatgeMinimTirarUnaCarta() { System.out.println("Has de tirar almenys una carta de la teva mà per completar el torn"); }
-
     public static void missatgeIndexNoValid() { System.out.println("l'índex triat no es vàlid"); }
     public static void missatgePosicioNoValida() { System.out.println("la posicio triada no es vàlida"); }
     public static void missatgeCartaAfegida(int indexPosicio, int indexCombinacio) { System.out.println("Carta afegida a la posició " + (indexPosicio + 1) + " de la combinació " + (indexCombinacio + 1)); }
@@ -207,4 +217,13 @@ public class Consola {
     public static void missatgeAccio1RummikubNoValida() { System.out.println("No es pot agafar una carta, ja has modificat el tauler o no hi ha fitxes a la baralla"); }
     public static void missatgeAccio4RummikubNoValida() { System.out.println("No es pots finalitzar el torn, has de modificar/afegir combinacions o agafar una fitxa"); }
 
+    // comentaris del rummikub
+    public static void missatgeMinimPuntsIncorrecte(int punts) { System.out.println("Es la teva primera tirada, has de tirar MINIM 30 punts, i les teves combinacions fan: " + punts); }
+    public static void missatgeCombinacioValida() { System.out.println("Primera combinacio de 30 punts o més acceptada!"); }
+    public static void missatgeModificacioNoPossible() { System.out.println("No pots modificar la taula, recorda que per poder fer-ho has d'haver fet la primera jugada de minim 30 punts"); }
+    public static void missatgeDarreraRonda() { System.out.println("Atenció, estas a la darrera ronda de la partida"); }
+    // comentaris gin rummy
+    public static void missatgeNoEsPotDescartar(Carta carta) { System.out.println("la carta " + carta + " no es pot decartar, ja es la mateix que has agafat de la pila de descarts"); }
+    public static void missatgeSiEsPotDescartar(Carta carta) { System.out.println("la carta " + carta + " s'ha descartat correctament de la teva ma"); }
+    public static void missatgeTriarCartaDescartar() { System.out.println("tria l'index de la carta que vols descartar, recorda que no pot ser la mateixa que acabdes d'agafar si l'has agafada de la pila de descarts"); }
 }
