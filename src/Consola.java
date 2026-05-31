@@ -190,6 +190,54 @@ public class Consola {
         return opcio;
     }
 
+    public static int demanarAccioGinRummy() {
+        int accio = 0;
+
+        while(accio != 1 && accio != 2 && accio != 3) {
+            System.out.println("Tria una opció:");
+            System.out.println("1. Acabar acció (per si ja has acabat d'ordenar les cartes o no les vols tocar) ");
+            System.out.println("2. Ordenar les cartes");
+            System.out.println("3. Tancar ronda (Knock / Gin)");
+            accio = scanner.nextInt();
+            scanner.nextLine();
+
+            if (accio != 1 && accio != 2 && accio != 3) {
+                System.out.println("Opció no vàlida, torna a triar");
+            }
+        }
+        return accio;
+    }
+
+    public static ArrayList<Carta> demanarNovaCombinacioGin (Jugador jugador) {
+        ArrayList<Carta> combinacioNova = new ArrayList<>();
+        boolean combinacioAcabada = false;
+
+        while (!combinacioAcabada && !jugador.maCartes.isEmpty()) {
+            System.out.println("Les teves cartes per fer la nova combinacio són les segÚents:");
+            mostrarBaralla(jugador.maCartes);
+
+            System.out.println("Tria el número de carta que vols afegir a la combinació, posa 0 si vols finalitzar la combinació: ");
+            int opcio = scanner.nextInt();
+            scanner.nextLine();
+
+            if (opcio == 0) {
+                combinacioAcabada = true;
+            } else if (opcio > 0 && opcio <= jugador.maCartes.size()) {
+                Carta cartaTriada = jugador.maCartes.remove(opcio - 1);
+                combinacioNova.add(cartaTriada);
+                System.out.println("S'ha afegit la carta a la nova combinació");
+            } else {
+                System.out.println("Número no vàlid, torna a intentar-ho");
+            }
+        }
+
+        if (!combinacioNova.isEmpty()) {
+            System.out.println("Combinació guardada");
+        }
+        return combinacioNova;
+    }
+
+
     // comentaris comuns a totes les modalitats
     public static void espais() { System.out.println("------------------------------------------------------------"); }
     public static void tornDe(String nom) { System.out.println("És el torn del jugador/a: " + nom); }
@@ -199,6 +247,7 @@ public class Consola {
     public static void mostrarCartaRobada(Carta cartaRobada) { System.out.println("Has robat la carta: " + cartaRobada); }
     public static void missatgeBarallaBuida() { System.out.println("La baralla esta buida, tria una altre opció"); }
     public static void imprimirNumFitxesBaralla(ArrayList<Carta> baralla) { System.out.println("A la baralla queden " + baralla.size() + " fitxes"); }
+    public static void darreraCartaPilaDescards(Carta cartaDescartada) { System.out.println("La carta que pots agafar de la pila de descards és: " + cartaDescartada); }
     // comentaris sobre els punts
     // missatge combinacions
     public static void missatgeCombinacioNoValida() { System.out.println("La teva combinacio no es valida"); }
@@ -226,4 +275,7 @@ public class Consola {
     public static void missatgeNoEsPotDescartar(Carta carta) { System.out.println("la carta " + carta + " no es pot decartar, ja es la mateix que has agafat de la pila de descarts"); }
     public static void missatgeSiEsPotDescartar(Carta carta) { System.out.println("la carta " + carta + " s'ha descartat correctament de la teva ma"); }
     public static void missatgeTriarCartaDescartar() { System.out.println("tria l'index de la carta que vols descartar, recorda que no pot ser la mateixa que acabdes d'agafar si l'has agafada de la pila de descarts"); }
+    public static void missatgePerdutRondaGin(Jugador jugador) { System.out.println("Has perdut la ronda " + jugador.nom + " el rival te igual o menys punts que tu"); }
+    public static void missatgeKnockGin(Jugador jugador) { System.out.println("Enhorabona " + jugador.nom + " has fet un Knock! Guanyes la ronda"); }
+    public static void missatgeGinGin(Jugador jugador) { System.out.println("Enhorabona " + jugador.nom + " has fet un gin! Guanyes la ronda"); }
 }
