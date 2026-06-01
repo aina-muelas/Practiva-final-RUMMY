@@ -77,7 +77,7 @@ public class Consola {
         return nom;
     }
 
-    public static int demanarAccio(Jugador jugadorActual) {
+    public static int demanarAccioRummikub(Jugador jugadorActual) {
         int opcio = 0;
         while (opcio != 1 && opcio != 2 && opcio != 3 && opcio!= 4) {
             System.out.println("Que vols fer??");

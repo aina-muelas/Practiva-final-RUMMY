@@ -3,12 +3,11 @@ import java.util.Collections;
 
 public class Baralla {
     ArrayList<Carta> baralla = new ArrayList<Carta>();
-    final String[] numerosFrancesa = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "AS"};
+    final String[] numerosFrancesa = {"AS", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
     final int[] valorsFrancesa = {1,2,3,4,5,6,7,8,9,10,10,10,10};
     final String joker = "Joker";
     final String[] palsFrancesa = {"Pica", "Trevol", "Cor", "Diamant"};
 
-    // final String[] numerosRummiKub = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"};
     final String[] colorsRummiKub = {"Vermell", "Blau", "Groc", "Negre"};
 
 

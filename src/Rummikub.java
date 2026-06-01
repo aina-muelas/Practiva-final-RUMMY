@@ -41,7 +41,7 @@ public class Rummikub extends Normes {
                 Consola.espais();
 
                 boolean barallabuida = Joc.barallaPartida.baralla.isEmpty();
-                accio = Consola.demanarAccio(jugadorActual);
+                accio = Consola.demanarAccioRummikub(jugadorActual);
 
                 if (accio == 1) {
                     if (!haTocatTauler && !barallabuida) {
