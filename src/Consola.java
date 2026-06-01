@@ -213,7 +213,7 @@ public class Consola {
         boolean combinacioAcabada = false;
 
         while (!combinacioAcabada && !jugador.maCartes.isEmpty()) {
-            System.out.println("Les teves cartes per fer la nova combinacio són les segÚents:");
+            System.out.println( jugador.nom + "Les teves cartes per fer la nova combinacio són les segÚents:");
             mostrarBaralla(jugador.maCartes);
 
             System.out.println("Tria el número de carta que vols afegir a la combinació, posa 0 si vols finalitzar la combinació: ");

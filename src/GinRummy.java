@@ -1,3 +1,5 @@
+import com.sun.source.tree.BreakTree;
+
 import java.util.ArrayList;
 
 public class GinRummy extends Normes {
@@ -30,6 +32,7 @@ public class GinRummy extends Normes {
                 esDePilaDescarts = false;
                 Carta cartaAgafada = jocActual.agafarCarta();
                 jugadorActual.maCartes.add(cartaAgafada);
+
 
                 while (!accioCompletada) {
                     int accio = Consola.demanarAccioGinRummy();
@@ -68,10 +71,17 @@ public class GinRummy extends Normes {
                             jocActual.mirarGuanyadorRonda(jugadorActual);
                             accioCompletada = true;
                             hiHaGuanyadorRonda = true;
+
                         }
 
                     }
                     hiHaGuanyadorPartida = jocActual.haGuanyat(jugadorActual);
+                    if (hiHaGuanyadorPartida) {
+                        break;
+                    }
+                    if (hiHaGuanyadorRonda) {
+                        break;
+                    }
                 }
 
                 while (!haDescartatCarta) {
@@ -94,12 +104,49 @@ public class GinRummy extends Normes {
 
     }
 
-    void inicialitzarNovaRonda() {
+    private EvaluarMa calcularCombinacions(ArrayList<Carta> maJugador) {
+        EvaluarMa millorEvaluacio = new EvaluarMa();
+        millorEvaluacio.puntsMorts = comptarPuntsCombinacio(maJugador);
+        millorEvaluacio.cartesMortes = new ArrayList<>(maJugador);
+
+        int numCartes = maJugador.size();
+        int mascaraMaxima = 1 << numCartes;
+
+        for (int mascara = 7; mascara < mascaraMaxima; mascara++) {
+            if (Integer.bitCount(mascara) >= 3) {
+                ArrayList<Carta> cartesCombinades = new ArrayList<>();
+                ArrayList<Carta> cartesDescartades = new ArrayList<>();
+
+                for (int i = 0; i < numCartes; i++) {
+                    if ((mascara & (1 << i)) != 0) {
+                        cartesCombinades.add(maJugador.get(mascara));
+                    } else {
+                        cartesDescartades.add(maJugador.get(mascara));
+                    }
+                }
+
+                if (esCombinacioValida(cartesCombinades)) {
+                    EvaluarMa novaEvaluacio = calcularCombinacions(cartesDescartades);
+
+                    if (novaEvaluacio.puntsMorts < millorEvaluacio.puntsMorts) {
+                        millorEvaluacio.puntsMorts = novaEvaluacio.puntsMorts;
+                        millorEvaluacio.combinacionsPossibles = new ArrayList<>(novaEvaluacio.combinacionsPossibles);
+                        millorEvaluacio.combinacionsPossibles.add(cartesCombinades);
+                        millorEvaluacio.cartesMortes = novaEvaluacio.cartesMortes;
+                    }
+                }
+            }
+        }
+        return millorEvaluacio;
+    }
+
+
+    private void inicialitzarNovaRonda() {
         pilaDescartades.clear();
         for (int i = 0; i < Joc.arrayJugadors.length; i++) {
             Joc.arrayJugadors[i].maCartes.clear();
         }
-        Joc.barallaPartida.inicialitzarBaralla(3,1);
+        Joc.barallaPartida.inicialitzarBaralla(3, 1);
         Joc.barallaPartida.mesclarCartes();
         Joc.repartirCartes(Joc.barallaPartida);
 
@@ -108,12 +155,12 @@ public class GinRummy extends Normes {
         }
 
         int tamanyBaralla = Joc.barallaPartida.baralla.size();
-        Carta cartaInicial = Joc.barallaPartida.baralla.get(tamanyBaralla -1);
-        Joc.barallaPartida.baralla.remove(tamanyBaralla -1);
+        Carta cartaInicial = Joc.barallaPartida.baralla.get(tamanyBaralla - 1);
+        Joc.barallaPartida.baralla.remove(tamanyBaralla - 1);
         pilaDescartades.add(cartaInicial);
     }
 
-    Carta agafarCarta() {
+    private Carta agafarCarta() {
         Carta cartaAgafada = null;
         int opcioAgafar = Consola.demanarDonAgafar();
 
@@ -133,7 +180,7 @@ public class GinRummy extends Normes {
         return cartaAgafada;
     }
 
-    int intdexCartaQueVolDescartar(Jugador jugador) {
+    private int intdexCartaQueVolDescartar(Jugador jugador) {
         int numCartaDescartar = Consola.demanarIndexCarta(jugador.maCartes);
         return numCartaDescartar;
     }
@@ -157,7 +204,7 @@ public class GinRummy extends Normes {
         jugador.maCartes.add(indexNovaPos, carta);
     }
 
-    boolean tancarRonda(Jugador jugador) {
+    private boolean tancarRonda(Jugador jugador) {
         ArrayList<Carta> copiaMa = new ArrayList<>(jugador.maCartes);
         ArrayList<ArrayList<Carta>> combinacionsTriades = tirarCombinacions(jugador);
 
@@ -192,7 +239,7 @@ public class GinRummy extends Normes {
         return true;
     }
 
-    ArrayList<ArrayList<Carta>> tirarCombinacions(Jugador jugador) {
+    private ArrayList<ArrayList<Carta>> tirarCombinacions(Jugador jugador) {
         ArrayList<ArrayList<Carta>> combinacionsTriades = new ArrayList<>();
         boolean volFerCombinacions = true;
 
@@ -204,7 +251,7 @@ public class GinRummy extends Normes {
         return combinacionsTriades;
     }
 
-    void mirarGuanyadorRonda(Jugador jugadorQueHaTancat) {
+    private void mirarGuanyadorRonda(Jugador jugadorQueHaTancat) {
         int indexJugadorTanca;
         int indexRival;
 
@@ -236,7 +283,7 @@ public class GinRummy extends Normes {
         }
     }
 
-    int comptarPuntsCombinacio(ArrayList<Carta> combinacio) {
+    private int comptarPuntsCombinacio(ArrayList<Carta> combinacio) {
         int punts = 0;
         boolean esGrup = esGrupValid(combinacio);
         boolean esEscala = esEscalaValida(combinacio);
