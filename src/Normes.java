@@ -2,6 +2,23 @@ import java.util.ArrayList;
 
 public abstract class Normes {
 
+    public static int agafarRang(Carta carta) {
+        switch (carta.numero) {
+            case "AS":
+                return 1;
+            case "J":
+                return 11;
+            case "Q":
+                return 12;
+            case "K":
+                return 13;
+            case "Joker":
+                return 0;
+            default:
+                return carta.getValor();
+        }
+    }
+
     boolean esGrupValid(ArrayList<Carta> combinacio) {
         if (combinacio.size() > 4) {
             return false;
@@ -12,7 +29,7 @@ public abstract class Normes {
             for (int j = i + 1; j < combinacio.size(); j++) {
                 if (combinacio.get(j).esJoker()) continue;
 
-                if (combinacio.get(i).getValor() != combinacio.get(j).getValor()) {
+                if (agafarRang(combinacio.get(i)) != agafarRang(combinacio.get(j))) {
                     return false;
                 }
                 if (combinacio.get(i).getPalOColor().equals(combinacio.get(j).getPalOColor())) {
@@ -24,18 +41,18 @@ public abstract class Normes {
     }
 
     boolean esEscalaValida(ArrayList<Carta> combinacio) {
-        String colorEscala = "";
+        String palOColorEscala = "";
 
         for (int i = 0; i < combinacio.size(); i++) {
             if (combinacio.get(i).esJoker()) continue;
-            colorEscala = combinacio.get(i).getPalOColor();
+            palOColorEscala = combinacio.get(i).getPalOColor();
             break;
         }
 
         for (int j = 0; j < combinacio.size(); j++) {
             if (combinacio.get(j).esJoker()) continue;
 
-            if (!combinacio.get(j).getPalOColor().equals(colorEscala)) {
+            if (!combinacio.get(j).getPalOColor().equals(palOColorEscala)) {
                 return false;
             }
         }
@@ -47,8 +64,8 @@ public abstract class Normes {
             if (indexPrimeraFitxaReal == -1) {
                 indexPrimeraFitxaReal = i;
             } else {
-                int valorActual = combinacio.get(i).getValor();
-                int valorAnterior = combinacio.get(indexPrimeraFitxaReal).getValor();
+                int valorActual = agafarRang(combinacio.get(i));
+                int valorAnterior = agafarRang(combinacio.get(indexPrimeraFitxaReal));
 
                 int diferenciaValors = valorActual - valorAnterior;
                 int diferenciaPosicions = i - indexPrimeraFitxaReal;
@@ -58,7 +75,6 @@ public abstract class Normes {
                 }
             }
         }
-
         return true;
     }
 
@@ -67,7 +83,7 @@ public abstract class Normes {
             int valorMinim = i;
 
             for (int j = i + 1; j < combinacio.size(); j++) {
-                if (combinacio.get(j).getValor() < combinacio.get(valorMinim).getValor()) {
+                if (agafarRang(combinacio.get(j)) < agafarRang(combinacio.get(valorMinim))) {
                     valorMinim = j;
                 }
             }
@@ -95,7 +111,7 @@ public abstract class Normes {
 
         boolean esGrup = true;
         for (int i = 1; i < cartesReals.size(); i++) {
-            if (cartesReals.get(i).getValor() != cartesReals.get(0).getValor()) {
+            if (agafarRang(cartesReals.get(i)) != agafarRang(cartesReals.get(0))) {
                 esGrup = false;
                 break;
             }
@@ -108,19 +124,29 @@ public abstract class Normes {
 
         ArrayList<Carta> combinacioOrdenada = new ArrayList<>();
         int indexReal = 0;
-        int valorEsperat = cartesReals.get(0).getValor();
+        int valorInicial = agafarRang(cartesReals.get(0));
+        int valorEsperat = agafarRang(cartesReals.get(0));
 
         while (indexReal < cartesReals.size() || !jokers.isEmpty()) {
-            if (indexReal < cartesReals.size() && cartesReals.get(indexReal).getValor() == valorEsperat) {
+            if (indexReal < cartesReals.size() && agafarRang(cartesReals.get(indexReal)) == valorEsperat) {
                 combinacioOrdenada.add(cartesReals.get(indexReal));
                 indexReal++;
+                valorEsperat++;
             } else if (!jokers.isEmpty()) {
-                combinacioOrdenada.add(jokers.get(0));
-                jokers.remove(0);
+                if (valorEsperat <= 13) {
+                    combinacioOrdenada.add(jokers.get(0));
+                    jokers.remove(0);
+                    valorEsperat++;
+                } else if (valorInicial > 1) {
+                    combinacioOrdenada.add(0, jokers.get(0));
+                    jokers.remove(0);
+                    valorInicial--;
+                } else {
+                    break;
+                }
             } else {
                 break;
             }
-            valorEsperat++;
         }
         return combinacioOrdenada;
     }
@@ -134,9 +160,17 @@ public abstract class Normes {
     }
 
     public boolean esCombinacioValida(ArrayList<Carta> combinacio) {
-        if (combinacio == null || combinacio.size() < 3 || combinacio.size() >= 13) {
+        if (combinacio == null || combinacio.size() < 3 || combinacio.size() > 13) {
             return false;
-        } else if (esGrupValid(combinacio) || esEscalaValida(combinacio)) {
+        }
+        ArrayList<Carta> combinacioOrdenada = ordenarCombinacions(combinacio);
+        if (combinacioOrdenada.size() != combinacio.size()) {
+            return false;
+        }
+
+        if (esGrupValid(combinacioOrdenada) || esEscalaValida(combinacioOrdenada)) {
+            combinacio.clear();
+            combinacio.addAll(combinacioOrdenada);
             return true;
         }
         return false;
