@@ -9,10 +9,6 @@ public class Carta {
         this.valor = valor;
     }
 
-    public Carta(String numero){
-        this.numero = numero;
-    }
-
     public boolean esJoker() {
         return "Joker".equals(this.numero);
     }
