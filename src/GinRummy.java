@@ -1,9 +1,7 @@
-// Controlar ordre de 10,j,q,k
 import java.util.ArrayList;
 
 public class GinRummy extends Normes {
     static ArrayList<Carta> pilaDescartades = new ArrayList<>();
-    static int[] puntsAcumulatsJugador = new int[Joc.arrayJugadors.length];
     static boolean esDePilaDescarts = false;
 
     public static void jugarGinRummy() {
@@ -22,7 +20,7 @@ public class GinRummy extends Normes {
                 Consola.tornDe(jugadorActual.nom);
                 Consola.espais();
                 Consola.missatgeCartes();
-                Consola.mostrarBaralla(jugadorActual.maCartes);
+                Consola.mostrarMaCartes(jugadorActual.maCartes);
                 Consola.espais();
                 Consola.imprimirNumFitxesBaralla(Joc.barallaPartida.baralla);
                 Consola.darreraCartaPilaDescards(pilaDescartades.getLast());
@@ -272,14 +270,11 @@ public class GinRummy extends Normes {
     }
 
     private void mirarGuanyadorRonda(Jugador jugadorQueHaTancat, int opcioTancament) {
-        int indexJugadorTanca;
         int indexRival;
 
         if (jugadorQueHaTancat == Joc.arrayJugadors[0]) {
-            indexJugadorTanca = 0;
             indexRival = 1;
         } else {
-            indexJugadorTanca = 1;
             indexRival = 0;
         }
         Jugador jugadorRival = Joc.arrayJugadors[indexRival];
@@ -289,20 +284,20 @@ public class GinRummy extends Normes {
 
         if (opcioTancament == 1) {
             int puntsGuanyats = puntsRival + 50;
-            puntsAcumulatsJugador[indexJugadorTanca] += puntsGuanyats;
+            jugadorQueHaTancat.puntuacio += puntsGuanyats;
             Consola.missatgeBigGinGin(jugadorQueHaTancat);
         } else if (opcioTancament == 2) {
             int puntsGuanyats = puntsRival + 25;
-            puntsAcumulatsJugador[indexJugadorTanca] += puntsGuanyats;
+            jugadorQueHaTancat.puntuacio += puntsGuanyats;
             Consola.missatgeGinGin(jugadorQueHaTancat);
         } else if (opcioTancament == 3) {
             if (puntsJugadorTancador < puntsRival) {
                 int puntsGuanyats = puntsRival - puntsJugadorTancador;
-                puntsAcumulatsJugador[indexJugadorTanca] += puntsGuanyats;
+                jugadorQueHaTancat.puntuacio += puntsGuanyats;
                 Consola.missatgeKnockGin(jugadorQueHaTancat);
             } else {
                 int puntsGuanyats = (puntsJugadorTancador - puntsRival) + 25;
-                puntsAcumulatsJugador[indexRival] += puntsGuanyats;
+                jugadorRival.puntuacio += puntsGuanyats;
                 Consola.missatgePerdutRondaGin(jugadorQueHaTancat);
             }
         }
@@ -319,9 +314,9 @@ public class GinRummy extends Normes {
 
     @Override
     public boolean haGuanyat(Jugador jugador) {
-        for (int i = 0; i < puntsAcumulatsJugador.length; i++) {
+        for (int i = 0; i < Joc.arrayJugadors.length; i++) {
             Jugador jugadorActual = Joc.arrayJugadors[i];
-            if (puntsAcumulatsJugador[i] >= 100) {
+            if (jugadorActual.puntuacio >= 100) {
                 Consola.missatgeGuanyador(jugadorActual);
                 return true;
             }

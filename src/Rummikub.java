@@ -26,7 +26,7 @@ public class Rummikub extends Normes {
             Consola.espais();
             Consola.missatgeCartes();
             ordenarCartes(jugadorActual.maCartes);
-            Consola.mostrarBaralla(jugadorActual.maCartes);
+            Consola.mostrarMaCartes(jugadorActual.maCartes);
             Consola.espais();
 
             if (jugadorActual.haFetPrimeraTirada) {
@@ -111,7 +111,7 @@ public class Rummikub extends Normes {
         int puntsTotals = 0;
 
         while (seguirCreant && !jugador.getMaCartes().isEmpty()) {
-            ArrayList<Carta> combinacioNova = Consola.demanarNovaCombinacio(jugador);
+            ArrayList<Carta> combinacioNova = Consola.demanarNovaCombinacioRummyKub(jugador);
             if (combinacioNova.isEmpty()) {
                 break;
             }
@@ -185,7 +185,7 @@ public class Rummikub extends Normes {
             Consola.mostrarTaulaComuna(taulaComuna);
             Consola.espais();
             Consola.missatgeCartes();
-            Consola.mostrarBaralla(jugador.maCartes);
+            Consola.mostrarMaCartes(jugador.maCartes);
             Consola.espais();
 
             int opcio = Consola.demanarQueModificar(jugador);
@@ -319,18 +319,19 @@ public class Rummikub extends Normes {
     static boolean determinarGuanyador() {
         int fitxesMinimes = Joc.arrayJugadors[0].getMaCartes().size();
         Jugador jugadorGuanyador = Joc.arrayJugadors[0];
-        int puntsMinims = comptarPuntsCasEmpat(Joc.arrayJugadors[0]);
+        jugadorGuanyador.puntuacio = comptarPuntsCasEmpat(jugadorGuanyador);
 
         for (int i = 1; i < Joc.arrayJugadors.length; i++) {
-            if (Joc.arrayJugadors[i].getMaCartes().size() < fitxesMinimes) {
-                fitxesMinimes = Joc.arrayJugadors[i].getMaCartes().size();
-                jugadorGuanyador = Joc.arrayJugadors[i];
-                puntsMinims = comptarPuntsCasEmpat(Joc.arrayJugadors[i]);
-            } else if (Joc.arrayJugadors[i].getMaCartes().size() == fitxesMinimes) {
-                int puntsJugadorActual = comptarPuntsCasEmpat(Joc.arrayJugadors[i]);
-                if (puntsJugadorActual < puntsMinims) {
-                    jugadorGuanyador = Joc.arrayJugadors[i];
-                    puntsMinims = puntsJugadorActual;
+            Jugador jugadorActual = Joc.arrayJugadors[i];
+            int fitxesActuals = jugadorActual.getMaCartes().size();
+            if (fitxesActuals < fitxesMinimes) {
+                fitxesMinimes = fitxesActuals;
+                jugadorGuanyador = jugadorActual;
+                jugadorGuanyador.puntuacio = comptarPuntsCasEmpat(jugadorGuanyador);
+            } else if (fitxesActuals == fitxesMinimes) {
+                jugadorActual.puntuacio = comptarPuntsCasEmpat(jugadorActual);
+                if (jugadorActual.puntuacio < jugadorGuanyador.puntuacio) {
+                    jugadorGuanyador = jugadorActual;
                 }
             }
         }

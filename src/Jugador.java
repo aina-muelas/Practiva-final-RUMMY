@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class Jugador {
     String nom;
     ArrayList<Carta> maCartes;
-    int puntuacio;
+    int puntuacio = 0;
     boolean haFetPrimeraTirada = false;
 
     Jugador (String nom){
@@ -15,10 +15,8 @@ public class Jugador {
         return maCartes;
     }
 
-
-
     @Override
     public String toString() {
-        return "Jugador: " + nom + " | Cartes: " + maCartes;
+        return nom;
     }
 }

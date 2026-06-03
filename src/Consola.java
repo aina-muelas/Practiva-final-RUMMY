@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class Consola {
     public static Scanner scanner = new Scanner(System.in);
 
-    public static void mostrarBaralla(ArrayList<Carta> cartes) {
+    public static void mostrarMaCartes(ArrayList<Carta> cartes) {
         for (int i = 0; i < cartes.size(); i++) {
             Carta c = cartes.get(i);
             System.out.println((i + 1) + ". " + c.toString());
@@ -95,7 +95,7 @@ public class Consola {
         return opcio;
     }
 
-    public static ArrayList<Carta> demanarNovaCombinacio(Jugador jugador) {
+    public static ArrayList<Carta> demanarNovaCombinacioRummyKub(Jugador jugador) {
         ArrayList<Carta> combinacioNova = new ArrayList<>();
         boolean combinacioAcabada = false;
 
@@ -104,7 +104,7 @@ public class Consola {
                 System.out.println("Encara no has tirat cap combinació o no has acabat la jugada. Recorda, minim 30 punts i no pots modificar cap combinació de la taula");
             }
             System.out.println("Les teves cartes per fer la nova combinacio són les segÚents:");
-            mostrarBaralla(jugador.maCartes);
+            mostrarMaCartes(jugador.maCartes);
 
             System.out.println("Tria el número de carta que vols afegir a la combinació, posa 0 si vols finalitzar la combinació: ");
             int opcio = scanner.nextInt();
@@ -140,7 +140,7 @@ public class Consola {
 
     public static int demanarIndexCarta(ArrayList<Carta> cartes) {
         System.out.println("Tria el número de carta: ");
-        mostrarBaralla(cartes);
+        mostrarMaCartes(cartes);
         int opcio = scanner.nextInt() - 1;
         scanner.nextLine();
         return opcio;
@@ -156,7 +156,7 @@ public class Consola {
 
     public static int demanarPosicioDinsCombiancio(ArrayList<Carta> combinacio) {
         System.out.println("En quina posició la vols afegir? (1 = davant de tot, " + (combinacio.size() + 1) + " = darrere de tot)");
-        mostrarBaralla(combinacio);
+        mostrarMaCartes(combinacio);
         int opcio = scanner.nextInt() - 1;
         scanner.nextLine();
         return opcio;
@@ -197,7 +197,7 @@ public class Consola {
             System.out.println("Tria una opció:");
             System.out.println("1. Acabar acció (per si ja has acabat d'ordenar les cartes o no les vols tocar) ");
             System.out.println("2. Ordenar les cartes");
-            System.out.println("3. Tancar ronda (Knock / Gin)");
+            System.out.println("3. Tancar ronda (Knock / Gin / Big Gin)");
             accio = scanner.nextInt();
             scanner.nextLine();
 
@@ -214,7 +214,7 @@ public class Consola {
 
         while (!combinacioAcabada && !jugador.maCartes.isEmpty()) {
             System.out.println( jugador.nom + "Les teves cartes per fer la nova combinacio són les segÚents:");
-            mostrarBaralla(jugador.maCartes);
+            mostrarMaCartes(jugador.maCartes);
 
             System.out.println("Tria el número de carta que vols afegir a la combinació, posa 0 si vols finalitzar la combinació: ");
             int opcio = scanner.nextInt();
