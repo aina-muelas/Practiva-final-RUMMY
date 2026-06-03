@@ -252,7 +252,7 @@ public class Consola {
     // missatge combinacions
     public static void missatgeCombinacioNoValida() { System.out.println("La teva combinacio no es valida"); }
     public static void missatgeJugadaAcceptada() { System.out.println("Jugada acceptada i afegida a la taula"); }
-    // missatges combinacions
+    // missatges modificacions
     public static void missatgeModificacioNoValida() { System.out.println("Les modificacions no són vàlides, es restaura l'estat anterior"); }
     public static void missatgeModificacioValida() { System.out.println("Les modificacions són vàlides, es guardara el nou estat"); }
     //missatges guanyadors
@@ -282,5 +282,5 @@ public class Consola {
 
     public static void missatgeMillorCombinacio() { System.out.println("La millor combinacio amb la teva ma és: "); }
     public static void missatgeCartesMortes(ArrayList<Carta> cartesMortes) { System.out.println("Les teves cartes mortes serien: " + cartesMortes); }
-    public static void missatgePuntsMorts(int puntsMorts) { System.out.println("Els punts morts són: " + puntsMorts); }
+    public static void missatgePuntsMorts(int puntsMorts) { System.out.println("Els punts morts són: " + puntsMorts + " (per tancar la ronda en pots tenir màxim 10"); }
 }
