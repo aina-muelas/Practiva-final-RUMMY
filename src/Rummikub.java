@@ -381,4 +381,13 @@ public class Rummikub extends Normes {
         }
         return punts;
     }
+
+    @Override
+    public boolean haGuanyat(Jugador jugador) {
+        if (jugador.maCartes.isEmpty()) {
+            Consola.missatgeGuanyador(jugador);
+            return true;
+        }
+        return false;
+    }
 }

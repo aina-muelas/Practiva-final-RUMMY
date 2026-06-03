@@ -151,13 +151,7 @@ public abstract class Normes {
         return combinacioOrdenada;
     }
 
-    public boolean haGuanyat(Jugador jugador) {
-        if (jugador.maCartes.isEmpty()) {
-            Consola.missatgeGuanyador(jugador);
-            return true;
-        }
-        return false;
-    }
+    public abstract boolean haGuanyat(Jugador jugador);
 
     public boolean esCombinacioValida(ArrayList<Carta> combinacio) {
         if (combinacio == null || combinacio.size() < 3 || combinacio.size() > 13) {
