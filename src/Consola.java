@@ -247,6 +247,41 @@ public class Consola {
         return combinacioNova;
     }
 
+    public static int numPuntsGuanyar(int numJugadors) {
+        int numPunts = 0;
+        int puntsMinims = 0;
+        if (numJugadors == 2) {
+            puntsMinims = 100;
+        } else if (numJugadors == 3) {
+            puntsMinims = 150;
+        } else if (numJugadors == 4) {
+            puntsMinims = 200;
+        } else if (numJugadors == 5) {
+            puntsMinims = 250;
+        } else if (numJugadors == 6) {
+            puntsMinims = 300;
+        }
+
+        while (numPunts < puntsMinims) {
+            System.out.println("Quants de punts voleu que s'hagin de fer per guanyar la partida?");
+            System.out.println("Recordau que el minim per : " + numJugadors + " es " + puntsMinims);
+
+            numPunts = scanner.nextInt();
+            scanner.nextLine();
+
+            if (numPunts < puntsMinims) {
+                System.out.println("El numero de punts no supera els minims, torna a triar");
+            }
+        }
+        return numPunts;
+    }
+
+    public static void imprimirPuntsJugadors (Jugador [] matriuJugadors) {
+        for (int i = 0; i < matriuJugadors.length; i++) {
+            System.out.println(matriuJugadors[i].nom + " tens " + matriuJugadors[i].puntuacio + " punts en total");
+        }
+    }
+
 
     // comentaris comuns a totes les modalitats
     public static void espais() { System.out.println("------------------------------------------------------------"); }
@@ -294,4 +329,7 @@ public class Consola {
     public static void missatgeMillorCombinacio() { System.out.println("La millor combinacio amb la teva ma és: "); }
     public static void missatgeCartesMortes(ArrayList<Carta> cartesMortes) { System.out.println("Les teves cartes mortes serien: " + cartesMortes); }
     public static void missatgePuntsMorts(int puntsMorts) { System.out.println("Els punts morts són: " + puntsMorts + " (per tancar la ronda en pots tenir màxim 10"); }
+
+    // comentaris rummy classic
+    public static void missatgeGuanyadorRonda(Jugador jugador) { System.out.println("Enhorabona " + jugador.nom + " has guanyat la ronda la ronda"); }
 }

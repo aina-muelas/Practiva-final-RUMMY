@@ -17,6 +17,8 @@ public class GinRummy extends Normes {
                     Consola.missatgeEmpatGin();
                     hiHaGuanyadorRonda = true;
                 }
+                Consola.imprimirPuntsJugadors(Joc.arrayJugadors);
+
                 Jugador jugadorActual = Joc.arrayJugadors[Torn.jugaActual];
                 jocActual.mostrarInfoAJugador(jugadorActual);
 
