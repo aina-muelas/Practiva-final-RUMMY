@@ -21,6 +21,16 @@ public class Consola {
         }
     }
 
+    public static void mostrarCombinacionsPossibles(ArrayList<ArrayList<Carta>> taula) {
+        if (taula.isEmpty()) {
+            System.out.println("No hi ha combinacions disponibles");
+            return;
+        }
+        for (int i = 0; i < taula.size(); i++) {
+            System.out.println("Combinació " + (i + 1) + ": " + taula.get(i));
+        }
+    }
+
     public static int triarModalitat() {
         int modalitat = 0;
         while (modalitat <= 0) {
@@ -279,6 +289,7 @@ public class Consola {
     public static void missatgeKnockGin(Jugador jugador) { System.out.println("Enhorabona " + jugador.nom + " has fet un Knock! Guanyes la ronda"); }
     public static void missatgeGinGin(Jugador jugador) { System.out.println("Enhorabona " + jugador.nom + " has fet un GIN! Guanyes la ronda"); }
     public static void missatgeBigGinGin(Jugador jugador) { System.out.println("Enhorabona " + jugador.nom + " has fet un BIG GIN! Guanyes la ronda"); }
+    public static void missatgeEmpatGin () { System.out.println("Empat! ningu guanya punts a aquesta ronda"); }
 
     public static void missatgeMillorCombinacio() { System.out.println("La millor combinacio amb la teva ma és: "); }
     public static void missatgeCartesMortes(ArrayList<Carta> cartesMortes) { System.out.println("Les teves cartes mortes serien: " + cartesMortes); }

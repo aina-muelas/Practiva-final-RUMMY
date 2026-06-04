@@ -13,6 +13,10 @@ public class GinRummy extends Normes {
             boolean hiHaGuanyadorRonda = false;
 
             while (!hiHaGuanyadorRonda) {
+                if (Joc.barallaPartida.baralla.size() == 2) {
+                    Consola.missatgeEmpatGin();
+                    hiHaGuanyadorRonda = true;
+                }
                 Jugador jugadorActual = Joc.arrayJugadors[Torn.jugaActual];
                 jocActual.mostrarInfoAJugador(jugadorActual);
 
@@ -160,7 +164,7 @@ public class GinRummy extends Normes {
 
     private void imprimirMillorMa (EvaluarMa millorMa) {
         Consola.missatgeMillorCombinacio();
-        Consola.mostrarTaulaComuna(millorMa.combinacionsPossibles);
+        Consola.mostrarCombinacionsPossibles(millorMa.combinacionsPossibles);
         Consola.missatgeCartesMortes(millorMa.cartesMortes);
         Consola.missatgePuntsMorts(millorMa.puntsMorts);
     }
