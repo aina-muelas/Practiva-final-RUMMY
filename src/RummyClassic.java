@@ -182,31 +182,14 @@ public class RummyClassic extends Normes {
         Consola.missatgeCartaAfegida(indexPosicio, indexCombinacio);
     }
 
-    private int comptarPuntsCombinacio(ArrayList<Carta> combinacio) {
+    private int comptarPunts(ArrayList<Carta> cartesJugador) {
         int punts = 0;
-        boolean esGrup = esGrupValid(combinacio);
-        boolean esEscala = esEscalaValida(combinacio);
 
-        int indexFitxaReal = -1;
-        int valorFitxaReal = 0;
-
-        for (int i = 0; i < combinacio.size(); i++) {
-            if (!combinacio.get(i).esJoker()) {
-                indexFitxaReal = i;
-                valorFitxaReal = combinacio.get(i).getValor();
-                break;
-            }
-        }
-
-        for (int i = 0; i < combinacio.size(); i++) {
-            if (!combinacio.get(i).esJoker()) {
-                punts += combinacio.get(i).getValor();
+        for (int i = 0; i < cartesJugador.size(); i++) {
+            if (cartesJugador.get(i).esAS()) {
+                punts += 15;
             } else {
-                if (esGrup) {
-                    punts += valorFitxaReal;
-                } else if (esEscala) {
-                    punts += valorFitxaReal + (i - indexFitxaReal);
-                }
+                punts += cartesJugador.get(i).getValor();
             }
         }
         return punts;
@@ -232,6 +215,11 @@ public class RummyClassic extends Normes {
 
     private boolean guanyadorRonda(Jugador jugadorActual) {
         if (jugadorActual.maCartes.isEmpty()) {
+            for (int i = 0; i < Joc.arrayJugadors.length; i++) {
+                if (Joc.arrayJugadors[i] != jugadorActual) {
+                    jugadorActual.puntuacio += comptarPunts(Joc.arrayJugadors[i].maCartes);
+                }
+            }
             Consola.missatgeGuanyadorRonda(jugadorActual);
         }
         return false;

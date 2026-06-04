@@ -13,6 +13,10 @@ public class Carta {
         return "Joker".equals(this.numero);
     }
 
+    public boolean esAS() {
+        return "AS".equals(this.numero);
+    }
+
     public int getValor() {
         return valor;
     }

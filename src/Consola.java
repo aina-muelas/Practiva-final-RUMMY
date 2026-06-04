@@ -320,7 +320,9 @@ public class Consola {
     public static void missatgeNoEsPotDescartar(Carta carta) { System.out.println("la carta " + carta + " no es pot decartar, ja es la mateix que has agafat de la pila de descarts"); }
     public static void missatgeSiEsPotDescartar(Carta carta) { System.out.println("la carta " + carta + " s'ha descartat correctament de la teva ma"); }
     public static void missatgeTriarCartaDescartar() { System.out.println("tria l'index de la carta que vols descartar, recorda que no pot ser la mateixa que acabdes d'agafar si l'has agafada de la pila de descarts"); }
+    public static void missatgeRivalTiraCombi(Jugador jugadorRival) { System.out.println(jugadorRival + " es el teu torn de tirar les combinacions");}
     public static void missatgePerdutRondaGin(Jugador jugador) { System.out.println("Has perdut la ronda " + jugador.nom + " el rival te igual o menys punts que tu"); }
+
     public static void missatgeKnockGin(Jugador jugador) { System.out.println("Enhorabona " + jugador.nom + " has fet un Knock! Guanyes la ronda"); }
     public static void missatgeGinGin(Jugador jugador) { System.out.println("Enhorabona " + jugador.nom + " has fet un GIN! Guanyes la ronda"); }
     public static void missatgeBigGinGin(Jugador jugador) { System.out.println("Enhorabona " + jugador.nom + " has fet un BIG GIN! Guanyes la ronda"); }
