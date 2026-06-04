@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Rummikub extends Normes {
-    public static ArrayList<ArrayList<Carta>> taulaComuna = new ArrayList<>();
+    private static ArrayList<ArrayList<Carta>> taulaComuna = new ArrayList<>();
 
     public static void jugarRummiKub() {
         Rummikub jocActual = new Rummikub();
@@ -91,7 +91,7 @@ public class Rummikub extends Normes {
         }
     }
 
-    boolean agafarFitxa(Jugador jugador) {
+    private boolean agafarFitxa(Jugador jugador) {
         if (!Joc.barallaPartida.baralla.isEmpty()) {
             Carta cartaRobada = Joc.barallaPartida.baralla.remove(0);
             jugador.maCartes.add(cartaRobada);
@@ -103,7 +103,7 @@ public class Rummikub extends Normes {
         return false;
     }
 
-    boolean tirarFitxes(Jugador jugador) {
+    private boolean tirarFitxes(Jugador jugador) {
         ArrayList<Carta> copiaMaInicial = new ArrayList<>(jugador.getMaCartes());
 
         boolean seguirCreant = true;
@@ -167,7 +167,7 @@ public class Rummikub extends Normes {
         }
     }
 
-    boolean modificarTaula(Jugador jugador) {
+    private boolean modificarTaula(Jugador jugador) {
         ArrayList<Carta> copiaMaInicial = new ArrayList<>(jugador.getMaCartes());
         ArrayList<ArrayList<Carta>> copiaTaulaInicial = new ArrayList<>();
 
@@ -316,7 +316,7 @@ public class Rummikub extends Normes {
         }
     }
 
-    static boolean determinarGuanyador() {
+    private static boolean determinarGuanyador() {
         int fitxesMinimes = Joc.arrayJugadors[0].getMaCartes().size();
         Jugador jugadorGuanyador = Joc.arrayJugadors[0];
         jugadorGuanyador.puntuacio = comptarPuntsCasEmpat(jugadorGuanyador);
@@ -339,7 +339,7 @@ public class Rummikub extends Normes {
         return true;
     }
 
-    static int comptarPuntsCasEmpat(Jugador jugador) {
+    private static int comptarPuntsCasEmpat(Jugador jugador) {
         int numPunts = 0;
         Carta cartaActual;
         for (int i = 0; i < jugador.maCartes.size(); i++) {
@@ -353,7 +353,7 @@ public class Rummikub extends Normes {
         return numPunts;
     }
 
-    int comptarPuntsCombinacio(ArrayList<Carta> combinacio) {
+    private int comptarPuntsCombinacio(ArrayList<Carta> combinacio) {
         int punts = 0;
         boolean esGrup = esGrupValid(combinacio);
         boolean esEscala = esEscalaValida(combinacio);
