@@ -281,7 +281,7 @@ public class GinRummy extends Normes {
         boolean volFerCombinacions = Consola.seguirCreantCombinacions(jugador);
 
         while (volFerCombinacions) {
-            ArrayList<Carta> combinacioActual = Consola.demanarNovaCombinacioGin(jugador);
+            ArrayList<Carta> combinacioActual = Consola.demanarNovaCombinacioGeneral(jugador);
             if (combinacioActual != null && !combinacioActual.isEmpty()) {
                 combinacionsTriades.add(combinacioActual);
             }

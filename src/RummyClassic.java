@@ -19,10 +19,7 @@ public class RummyClassic extends Normes {
 
             while (!hiHaGuanyadorRonda) {
                 if (Joc.barallaPartida.baralla.isEmpty()) {
-                    Joc.barallaPartida.baralla.addAll(pilaDescartades);
-                    pilaDescartades.clear();
-                    Carta cartaAAfegir = pilaDescartades.getLast();
-                    pilaDescartades.add(cartaAAfegir);
+                    jocActual.restaurarBarallaSiEstaBuida();
                 }
 
                 Consola.imprimirPuntsJugadors(Joc.arrayJugadors);
@@ -32,13 +29,12 @@ public class RummyClassic extends Normes {
                 esDePilaDescarts = false;
                 Carta cartaAgafada = jocActual.agafarCarta();
                 jugadorActual.maCartes.add(cartaAgafada);
-
                 ordenarCartes(jugadorActual.maCartes);
+                Consola.mostrarMaCartes(jugadorActual.maCartes);
 
                 boolean accioCompletada = false;
-
                 while (!accioCompletada) {
-                    int accio = Consola.demanarAccioGinRummy();
+                    int accio = Consola.demanarAccioRummyClassic();
 
                     if (accio == 1) {
                         accioCompletada = true;
@@ -47,20 +43,26 @@ public class RummyClassic extends Normes {
                     } else if (accio == 3) {
                         jocActual.afegirFitxaCombinacio(jugadorActual);
                     }
-                    hiHaGuanyadorRonda = jocActual.guanyadorRonda(jugadorActual);
 
-                    hiHaGuanyadorPartida = jocActual.haGuanyat(jugadorActual);
-                    if (hiHaGuanyadorPartida) {
-                        break;
-                    }
+                    hiHaGuanyadorRonda = jocActual.guanyadorRonda(jugadorActual);
                     if (hiHaGuanyadorRonda) {
-                        break;
+                        hiHaGuanyadorPartida = jocActual.haGuanyat(jugadorActual);
+                        accioCompletada = true;
+
                     }
                 }
 
-                if (!hiHaGuanyadorRonda && !hiHaGuanyadorPartida) {
+                if (!hiHaGuanyadorRonda) {
                     jocActual.descartarCarta(jugadorActual, cartaAgafada);
+                    hiHaGuanyadorRonda = jocActual.guanyadorRonda(jugadorActual);
 
+                    if (hiHaGuanyadorRonda) {
+                        hiHaGuanyadorPartida = jocActual.haGuanyat(jugadorActual);
+
+                    }
+                }
+
+                if (!hiHaGuanyadorRonda) {
                     Torn.calcularTorn(Joc.arrayJugadors.length);
                 }
             }
@@ -69,10 +71,13 @@ public class RummyClassic extends Normes {
 
     private void inicialitzarNovaRonda() {
         pilaDescartades.clear();
+        taulaComuna.clear();
         for (int i = 0; i < Joc.arrayJugadors.length; i++) {
             Joc.arrayJugadors[i].maCartes.clear();
         }
-        Joc.barallaPartida.inicialitzarBaralla(3, 1);
+
+        int numBaralles = Baralla.determinarQuantitatBaralles(1, Joc.arrayJugadors.length);
+        Joc.barallaPartida.inicialitzarBaralla(1, numBaralles);
         Joc.barallaPartida.mesclarCartes();
         Joc.repartirCartes(Joc.barallaPartida);
 
@@ -86,8 +91,20 @@ public class RummyClassic extends Normes {
         pilaDescartades.add(cartaInicial);
     }
 
+    private void restaurarBarallaSiEstaBuida() {
+        Carta cartaAAfegir = pilaDescartades.getLast();
+        pilaDescartades.remove(pilaDescartades.size() - 1);
+
+        Joc.barallaPartida.baralla.addAll(pilaDescartades);
+        Joc.barallaPartida.mesclarCartes();
+        pilaDescartades.clear();
+        pilaDescartades.add(cartaAAfegir);
+    }
+
     private void mostrarInfoAJugador(Jugador jugadorActual) {
         Consola.tornDe(jugadorActual.nom);
+        Consola.espais();
+        Consola.mostrarTaulaComuna(taulaComuna);
         Consola.espais();
         Consola.missatgeCartes();
         Consola.mostrarMaCartes(jugadorActual.maCartes);
@@ -124,7 +141,7 @@ public class RummyClassic extends Normes {
         ArrayList<ArrayList<Carta>> combinacionsNoves = new ArrayList<ArrayList<Carta>>();
 
         while (seguirCreant && !jugador.getMaCartes().isEmpty()) {
-            ArrayList<Carta> combinacioNova = Consola.demanarNovaCombinacioRummyKub(jugador);
+            ArrayList<Carta> combinacioNova = Consola.demanarNovaCombinacioGeneral(jugador);
             if (combinacioNova.isEmpty()) {
                 break;
             }
@@ -182,19 +199,6 @@ public class RummyClassic extends Normes {
         Consola.missatgeCartaAfegida(indexPosicio, indexCombinacio);
     }
 
-    private int comptarPunts(ArrayList<Carta> cartesJugador) {
-        int punts = 0;
-
-        for (int i = 0; i < cartesJugador.size(); i++) {
-            if (cartesJugador.get(i).esAS()) {
-                punts += 15;
-            } else {
-                punts += cartesJugador.get(i).getValor();
-            }
-        }
-        return punts;
-    }
-
     private void descartarCarta(Jugador jugadorActual, Carta cartaAgafada) {
         boolean haDescartatCarta = false;
         while (!haDescartatCarta) {
@@ -213,6 +217,19 @@ public class RummyClassic extends Normes {
         }
     }
 
+    private int comptarPunts(ArrayList<Carta> cartesJugador) {
+        int punts = 0;
+
+        for (int i = 0; i < cartesJugador.size(); i++) {
+            if (cartesJugador.get(i).esAS()) {
+                punts += 15;
+            } else {
+                punts += cartesJugador.get(i).getValor();
+            }
+        }
+        return punts;
+    }
+
     private boolean guanyadorRonda(Jugador jugadorActual) {
         if (jugadorActual.maCartes.isEmpty()) {
             for (int i = 0; i < Joc.arrayJugadors.length; i++) {
@@ -221,6 +238,7 @@ public class RummyClassic extends Normes {
                 }
             }
             Consola.missatgeGuanyadorRonda(jugadorActual);
+            return true;
         }
         return false;
     }

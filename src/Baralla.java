@@ -62,7 +62,7 @@ public class Baralla {
 
     static int determinarQuantitatBaralles(int modalitat, int numJugadors) {
         if (modalitat == 1) {
-            return 2;
+            return 1;
         } else if (modalitat == 2) {
             return 2;
         } else if (modalitat == 3) {

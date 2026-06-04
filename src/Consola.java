@@ -105,6 +105,41 @@ public class Consola {
         return opcio;
     }
 
+    public static int demanarAccioGinRummy() {
+        int accio = 0;
+
+        while(accio != 1 && accio != 2 && accio != 3) {
+            System.out.println("Tria una opció:");
+            System.out.println("1. Acabar acció (per si ja has acabat d'ordenar les cartes o no les vols tocar) ");
+            System.out.println("2. Ordenar les cartes");
+            System.out.println("3. Tancar ronda (Knock / Gin / Big Gin)");
+            accio = scanner.nextInt();
+            scanner.nextLine();
+
+            if (accio != 1 && accio != 2 && accio != 3) {
+                System.out.println("Opció no vàlida, torna a triar");
+            }
+        }
+        return accio;
+    }
+
+    public static int demanarAccioRummyClassic() {
+        int accio = 0;
+        while(accio != 1 && accio != 2 && accio != 3) {
+            System.out.println("Tria una opció:");
+            System.out.println("1. Acabar acció (per si no pots o no vols tirar cartes i/o combinacions) ");
+            System.out.println("2. Tirar una nova combinació");
+            System.out.println("3. Afegir una carta a una combinació existent)");
+            accio = scanner.nextInt();
+            scanner.nextLine();
+
+            if (accio != 1 && accio != 2 && accio != 3) {
+                System.out.println("Opció no vàlida, torna a triar");
+            }
+        }
+        return accio;
+    }
+
     public static ArrayList<Carta> demanarNovaCombinacioRummyKub(Jugador jugador) {
         ArrayList<Carta> combinacioNova = new ArrayList<>();
         boolean combinacioAcabada = false;
@@ -135,6 +170,48 @@ public class Consola {
             System.out.println("Combinació guardada de forma provisional");
         }
         return combinacioNova;
+    }
+
+    public static ArrayList<Carta> demanarNovaCombinacioGeneral(Jugador jugador) {
+        ArrayList<Carta> combinacioNova = new ArrayList<>();
+        boolean combinacioAcabada = false;
+
+        while (!combinacioAcabada && !jugador.maCartes.isEmpty()) {
+            System.out.println( jugador.nom + "Les teves cartes per fer la nova combinacio són les segÚents:");
+            mostrarMaCartes(jugador.maCartes);
+
+            System.out.println("Tria el número de carta que vols afegir a la combinació, posa 0 si vols finalitzar la combinació: ");
+            int opcio = scanner.nextInt();
+            scanner.nextLine();
+
+            if (opcio == 0) {
+                combinacioAcabada = true;
+            } else if (opcio > 0 && opcio <= jugador.maCartes.size()) {
+                Carta cartaTriada = jugador.maCartes.remove(opcio - 1);
+                combinacioNova.add(cartaTriada);
+                System.out.println("S'ha afegit la carta a la nova combinació");
+            } else {
+                System.out.println("Número no vàlid, torna a intentar-ho");
+            }
+        }
+
+        if (!combinacioNova.isEmpty()) {
+            System.out.println("Combinació guardada");
+        }
+        return combinacioNova;
+    }
+
+    public static boolean seguirCreantCombinacions(Jugador jugador) {
+        ArrayList<Carta> maCartesJugador = jugador.getMaCartes();
+
+        if (!maCartesJugador.isEmpty()) {
+            System.out.println("Vols crear una nova combinació? )(s/n): ");
+            String resposta = scanner.nextLine().trim().toLowerCase();
+            if (!resposta.equals("s")) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public static int demanarQueModificar (Jugador jugador) {
@@ -172,19 +249,6 @@ public class Consola {
         return opcio;
     }
 
-    public static boolean seguirCreantCombinacions(Jugador jugador) {
-        ArrayList<Carta> maCartesJugador = jugador.getMaCartes();
-
-        if (!maCartesJugador.isEmpty()) {
-            System.out.println("Vols crear una nova combinació? )(s/n): ");
-            String resposta = scanner.nextLine().trim().toLowerCase();
-            if (!resposta.equals("s")) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     public static int demanarDonAgafar () {
         int opcio = 0;
 
@@ -198,53 +262,6 @@ public class Consola {
             }
         }
         return opcio;
-    }
-
-    public static int demanarAccioGinRummy() {
-        int accio = 0;
-
-        while(accio != 1 && accio != 2 && accio != 3) {
-            System.out.println("Tria una opció:");
-            System.out.println("1. Acabar acció (per si ja has acabat d'ordenar les cartes o no les vols tocar) ");
-            System.out.println("2. Ordenar les cartes");
-            System.out.println("3. Tancar ronda (Knock / Gin / Big Gin)");
-            accio = scanner.nextInt();
-            scanner.nextLine();
-
-            if (accio != 1 && accio != 2 && accio != 3) {
-                System.out.println("Opció no vàlida, torna a triar");
-            }
-        }
-        return accio;
-    }
-
-    public static ArrayList<Carta> demanarNovaCombinacioGin (Jugador jugador) {
-        ArrayList<Carta> combinacioNova = new ArrayList<>();
-        boolean combinacioAcabada = false;
-
-        while (!combinacioAcabada && !jugador.maCartes.isEmpty()) {
-            System.out.println( jugador.nom + "Les teves cartes per fer la nova combinacio són les segÚents:");
-            mostrarMaCartes(jugador.maCartes);
-
-            System.out.println("Tria el número de carta que vols afegir a la combinació, posa 0 si vols finalitzar la combinació: ");
-            int opcio = scanner.nextInt();
-            scanner.nextLine();
-
-            if (opcio == 0) {
-                combinacioAcabada = true;
-            } else if (opcio > 0 && opcio <= jugador.maCartes.size()) {
-                Carta cartaTriada = jugador.maCartes.remove(opcio - 1);
-                combinacioNova.add(cartaTriada);
-                System.out.println("S'ha afegit la carta a la nova combinació");
-            } else {
-                System.out.println("Número no vàlid, torna a intentar-ho");
-            }
-        }
-
-        if (!combinacioNova.isEmpty()) {
-            System.out.println("Combinació guardada");
-        }
-        return combinacioNova;
     }
 
     public static int numPuntsGuanyar(int numJugadors) {
@@ -264,7 +281,7 @@ public class Consola {
 
         while (numPunts < puntsMinims) {
             System.out.println("Quants de punts voleu que s'hagin de fer per guanyar la partida?");
-            System.out.println("Recordau que el minim per : " + numJugadors + " es " + puntsMinims);
+            System.out.println("Recordau que el minim per : " + numJugadors + " jugadors es " + puntsMinims);
 
             numPunts = scanner.nextInt();
             scanner.nextLine();
