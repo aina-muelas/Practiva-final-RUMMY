@@ -250,6 +250,7 @@ public class GinRummy extends Normes {
     }
 
     private void demanarCombinacionsRival (Jugador jugadorRival) {
+        Consola.missatgeRivalTiraCombi(jugadorRival);
         boolean combinacionsRivalAcabades = false;
         ArrayList<ArrayList<Carta>> combinacionsRival = new ArrayList<>();
         while (!combinacionsRivalAcabades) {
