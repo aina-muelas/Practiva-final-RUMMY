@@ -1,7 +1,8 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Baralla {
+public class Baralla implements Serializable {
     ArrayList<Carta> baralla = new ArrayList<Carta>();
     final String[] numerosFrancesa = {"AS", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
     final int[] valorsFrancesa = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10};

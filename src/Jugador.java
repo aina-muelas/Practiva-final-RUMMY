@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Jugador {
+public class Jugador implements Serializable {
     String nom;
     ArrayList<Carta> maCartes;
     int puntuacio = 0;
