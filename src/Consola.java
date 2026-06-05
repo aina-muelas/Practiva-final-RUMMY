@@ -402,4 +402,9 @@ public class Consola {
 
     // comentaris rummy classic
     public static void missatgeGuanyadorRonda(Jugador jugador, int puntuacio) { System.out.println("Enhorabona " + jugador.nom + " has guanyat la ronda la ronda amb, ara tens " + puntuacio + " punts"); }
+
+    // comentaris rummy argentini
+    public static void missatgeMaSupera700() {
+        System.out.println("la teva ma de cartes supera els 700 punts, a la tirada n'has de fer minim 100");
+    }
 }

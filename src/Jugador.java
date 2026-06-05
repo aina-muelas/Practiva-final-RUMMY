@@ -5,6 +5,7 @@ public class Jugador implements Serializable {
     String nom;
     ArrayList<Carta> maCartes;
     int puntuacio = 0;
+    int puntsMa = 0;
     boolean haFetPrimeraTirada = false;
 
     Jugador (String nom){
