@@ -350,5 +350,5 @@ public class Consola {
     public static void missatgePuntsMorts(int puntsMorts) { System.out.println("Els punts morts són: " + puntsMorts + " (per tancar la ronda en pots tenir màxim 10"); }
 
     // comentaris rummy classic
-    public static void missatgeGuanyadorRonda(Jugador jugador) { System.out.println("Enhorabona " + jugador.nom + " has guanyat la ronda la ronda"); }
+    public static void missatgeGuanyadorRonda(Jugador jugador, int puntuacio) { System.out.println("Enhorabona " + jugador.nom + " has guanyat la ronda la ronda amb, ara tens " + puntuacio + " punts"); }
 }

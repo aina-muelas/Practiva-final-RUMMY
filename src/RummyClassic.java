@@ -237,7 +237,7 @@ public class RummyClassic extends Normes {
                     jugadorActual.puntuacio += comptarPunts(Joc.arrayJugadors[i].maCartes);
                 }
             }
-            Consola.missatgeGuanyadorRonda(jugadorActual);
+            Consola.missatgeGuanyadorRonda(jugadorActual, jugadorActual.puntuacio);
             return true;
         }
         return false;
