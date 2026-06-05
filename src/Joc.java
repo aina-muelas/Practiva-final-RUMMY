@@ -1,10 +1,24 @@
+import java.util.ArrayList;
+
 public class Joc {
-    static int modalitatJoc = Consola.triarModalitat();
-    static int numJugadors = Consola.triarNumJugadors(modalitatJoc);
-    static Jugador [] arrayJugadors = new Jugador [numJugadors];
+    final int NOVA_PARTIDA = 1;
+    final int RESTAURAR_PARTIDA = 2;
+
+    static int modalitatJoc;
+    static int numJugadors;
+    static Jugador [] arrayJugadors;
     public static Baralla barallaPartida;
+    public static ArrayList<ArrayList<Carta>> taulaComuna = new ArrayList<>();
+    public static ArrayList<Carta> pilaDescartades = new ArrayList<>();
+
     public void jugar(){
-        prepararPartida();
+        int opcioTriada = Consola.demanarQueVolFer();
+
+        if (opcioTriada == NOVA_PARTIDA) {
+            prepararNovaPartida();
+        } else if (opcioTriada == RESTAURAR_PARTIDA) {
+            restaurarEstatPartidaExistent();
+        }
 
         if (modalitatJoc == 1) {
             RummyClassic.jugarRummyClassic();
@@ -17,7 +31,13 @@ public class Joc {
         }
     }
 
-    public static void prepararPartida(){
+    void prepararNovaPartida() {
+        modalitatJoc = Consola.triarModalitat();
+        numJugadors = Consola.triarNumJugadors(modalitatJoc);
+        arrayJugadors = new Jugador [numJugadors];
+        taulaComuna.clear();
+        pilaDescartades.clear();
+
         establirNomsJugadors();
         barallaPartida = new Baralla();
         int nBaralles = Baralla.determinarQuantitatBaralles(modalitatJoc, numJugadors);
@@ -64,5 +84,30 @@ public class Joc {
                 }
             }
         }
+    }
+
+    public static void guardarEstatPartida() {
+        String nomPartida = Consola.demanarNomPartida();
+
+        GuardarORestaurarPartida gestor = new GuardarORestaurarPartida(
+                nomPartida, modalitatJoc, Torn.jugaActual, arrayJugadors, taulaComuna, barallaPartida, pilaDescartades
+        );
+        gestor.guardarPartida();
+        Consola.missatgePartidaGuardada(nomPartida);
+        System.exit(0);
+    }
+
+    void restaurarEstatPartidaExistent() {
+        String nomPartida = Consola.demanarNomPartida();
+        GuardarORestaurarPartida restaurador = new GuardarORestaurarPartida(nomPartida);
+        restaurador.restaurarPartida();
+        modalitatJoc = restaurador.getModalitat();
+        arrayJugadors = restaurador.getArrayJugadors();
+        numJugadors = arrayJugadors.length;
+        barallaPartida = restaurador.getBaralla();
+        Torn.jugaActual = restaurador.getTorn();
+        taulaComuna = restaurador.getTaulerComu();
+        pilaDescartades = restaurador.getPilarDescartades();
+        Consola.missatgePartidaRestauradaCorrecte(nomPartida);
     }
 }

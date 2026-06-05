@@ -4,6 +4,36 @@ import java.util.Scanner;
 public class Consola {
     public static Scanner scanner = new Scanner(System.in);
 
+    public static int demanarQueVolFer() {
+        int opcio = 0;
+        while (opcio != 1 && opcio != 2) {
+            System.out.println("Que vols fer?");
+            System.out.println("1. Començar una partida nova");
+            System.out.println("2. Restaurar una partida ja creada");
+            opcio = scanner.nextInt();
+            scanner.nextLine();
+            if (opcio != 1 && opcio != 2) {
+                System.out.println("Opció invalida, torna a triar");
+            }
+        }
+        return opcio;
+    }
+
+    public static int demanarSiVolJugarOGuardar() {
+        int opcio = 0;
+        while (opcio != 1 && opcio != 2) {
+            System.out.println("Que vols fer?");
+            System.out.println("1. Seguir jugant");
+            System.out.println("2. Sortir i guardar la partida");
+            opcio = scanner.nextInt();
+            scanner.nextLine();
+            if (opcio != 1 && opcio != 2) {
+                System.out.println("Opció invalida, torna a triar");
+            }
+        }
+        return opcio;
+    }
+
     public static void mostrarMaCartes(ArrayList<Carta> cartes) {
         for (int i = 0; i < cartes.size(); i++) {
             Carta c = cartes.get(i);
@@ -299,10 +329,18 @@ public class Consola {
         }
     }
 
+    public static String demanarNomPartida() {
+        System.out.println("Introdueix el nom de la partida");
+        String nomPartida = scanner.nextLine();
+        return nomPartida;
+    }
 
     // comentaris comuns a totes les modalitats
     public static void espais() { System.out.println("------------------------------------------------------------"); }
     public static void tornDe(String nom) { System.out.println("És el torn del jugador/a: " + nom); }
+    // comentaris guardar/restaurar partida
+    public static void missatgePartidaRestauradaCorrecte(String nomPartida) { System.out.println("La partida " + nomPartida + " s'ha carregat correctament"); }
+    public static void missatgePartidaGuardada(String nomPartida) { System.out.println("La partida " + nomPartida + " s'ha guardat correctament"); }
     // comentaris baralla / cartes
     public static void missatgeMostrarTaula() { System.out.println("Les combinacions que hi ha a la taula són les següents:"); }
     public static void missatgeCartes() { System.out.println("Les teves cartes actuals: "); }
