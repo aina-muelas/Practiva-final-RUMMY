@@ -98,6 +98,7 @@ public class Joc {
     }
 
     void restaurarEstatPartidaExistent() {
+        Consola.mostrarPartidesGuardades();
         String nomPartida = Consola.demanarNomPartida();
         GuardarORestaurarPartida restaurador = new GuardarORestaurarPartida(nomPartida);
         restaurador.restaurarPartida();

@@ -1,3 +1,4 @@
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -17,6 +18,18 @@ public class Consola {
             }
         }
         return opcio;
+    }
+
+    public static void mostrarPartidesGuardades() {
+        System.out.println("Les partides que tens guardades són:");
+        File carpeta = new File("partidesRummyGuardades");
+        File [] llistaPartides = carpeta.listFiles();
+        System.out.println("Les partides que tens guardades són:");
+        if (llistaPartides != null) {
+            for (int i = 0; i < llistaPartides.length; i++) {
+                System.out.println("- " + llistaPartides[i].getName());
+            }
+        }
     }
 
     public static int demanarSiVolJugarOGuardar() {
