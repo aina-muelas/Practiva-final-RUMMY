@@ -343,7 +343,7 @@ public class RummyArgentino extends Normes {
             return;
         }
 
-        Joc.taulaComuna.get(indexOrigen).add(indexOrigen, cartaQueSubstitueix);
+        Joc.taulaComuna.get(indexOrigen).set(indexOrigen, cartaQueSubstitueix);
         jugador.maCartes.remove(indexCartaSubstitueix);
 
         int opcio = Consola.demanarOnMoure();

@@ -313,7 +313,7 @@ public class Rummikub extends Normes {
 
         Carta carta = Joc.taulaComuna.get(indexOrigen).remove(indexCarta);
         combinacioDesti.add(carta);
-        Consola.missatgeCartaAfegida(0, posDarrerIndex);
+        Consola.missatgeCartaAfegida(0, posDarrerIndex -1);
 
         if (Joc.taulaComuna.get(indexOrigen).size() == 0) {
             Joc.taulaComuna.remove(indexOrigen);
