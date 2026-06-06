@@ -5,6 +5,18 @@ public class RummyArgentino extends Normes {
     private static int numPuntsGuanyar;
     private static boolean esDePilaDescarts = false;
 
+    private static final int GUARDAR_PARTIDA = 2;
+    private static final int FINALITZAR_TORN = 1;
+    private static final int TIRAR_COMBINACIONS = 2;
+    private static final int MODIFICAR_COMBINACIONS = 3;
+
+    private static final int AGAFAR_CARTA_BARALLA = 1;
+    private static final int AGAFAR_CARTA_DESCARTADES = 2;
+
+    private static final int ACABAR_MODIFICACIONS = 1;
+    private static final int AFEGIR_FITXA_COMBINACIO = 2;
+    private static final int SUBSTITUIR_COMODI = 3;
+
     public static void jugarRummyArgentino() {
 
         RummyArgentino jocActual = new RummyArgentino();
@@ -19,7 +31,7 @@ public class RummyArgentino extends Normes {
             while (!hiHaGuanyadorRonda) {
                 int opcio = Consola.demanarSiVolJugarOGuardar();
 
-                if (opcio == 2) {
+                if (opcio == GUARDAR_PARTIDA) {
                     Joc.guardarEstatPartida();
                 } else {
                     if (Joc.barallaPartida.baralla.isEmpty()) {
@@ -40,11 +52,11 @@ public class RummyArgentino extends Normes {
                     while (!accioCompletada) {
                         int accio = Consola.demanarQueFerRummyArgentino();
 
-                        if (accio == 1) {
+                        if (accio == FINALITZAR_TORN) {
                             accioCompletada = true;
-                        } else if (accio == 2) {
+                        } else if (accio == TIRAR_COMBINACIONS) {
                             jocActual.tirarCombinacions(jugadorActual);
-                        } else if (accio == 3) {
+                        } else if (accio == MODIFICAR_COMBINACIONS) {
                             jocActual.modificarTaula(jugadorActual);
                         }
 
@@ -82,8 +94,8 @@ public class RummyArgentino extends Normes {
             Joc.arrayJugadors[i].puntsMa = 0;
         }
 
-        int numBaralles = Baralla.determinarQuantitatBaralles(1, Joc.arrayJugadors.length);
-        Joc.barallaPartida.inicialitzarBaralla(1, numBaralles);
+        int numBaralles = Baralla.determinarQuantitatBaralles(Baralla.RUMMY_ARGENTINO, Joc.arrayJugadors.length);
+        Joc.barallaPartida.inicialitzarBaralla(Baralla.RUMMY_ARGENTINO, numBaralles);
         Joc.barallaPartida.mesclarCartes();
         Joc.repartirCartes(Joc.barallaPartida);
 
@@ -143,13 +155,13 @@ public class RummyArgentino extends Normes {
         Carta cartaAgafada = null;
         int opcioAgafar = Consola.demanarDonAgafar();
 
-        if (opcioAgafar == 1) {
+        if (opcioAgafar == AGAFAR_CARTA_BARALLA) {
             int midaBaralla = Joc.barallaPartida.baralla.size();
             cartaAgafada = Joc.barallaPartida.baralla.get(midaBaralla - 1);
             Joc.barallaPartida.baralla.remove(midaBaralla - 1);
             Consola.mostrarCartaRobada(cartaAgafada);
             esDePilaDescarts = false;
-        } else if (opcioAgafar == 2) {
+        } else if (opcioAgafar == AGAFAR_CARTA_DESCARTADES) {
             int midaPilaDescarts = Joc.pilaDescartades.size();
             cartaAgafada = Joc.pilaDescartades.get(midaPilaDescarts - 1);
             Joc.pilaDescartades.remove(midaPilaDescarts - 1);
@@ -258,11 +270,11 @@ public class RummyArgentino extends Normes {
 
             int opcio = Consola.demanarQueModificarArgentino();
 
-            if (opcio == 1) {
+            if (opcio == ACABAR_MODIFICACIONS) {
                 seguirModificant = false;
-            } else if (opcio == 2) {
+            } else if (opcio == AFEGIR_FITXA_COMBINACIO) {
                 afegirFitxaCombinacio(jugador);
-            } else if (opcio == 3) {
+            } else if (opcio == SUBSTITUIR_COMODI) {
                 substituirComodi(jugador);
             }
         }

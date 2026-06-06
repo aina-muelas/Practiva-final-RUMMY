@@ -20,13 +20,13 @@ public class Joc {
             restaurarEstatPartidaExistent();
         }
 
-        if (modalitatJoc == 1) {
+        if (modalitatJoc == Baralla.RUMMY_CLASSIC) {
             RummyClassic.jugarRummyClassic();
-        } else if (modalitatJoc == 2) {
+        } else if (modalitatJoc == Baralla.RUMMIKUB) {
             Rummikub.jugarRummiKub();
-               } else if (modalitatJoc == 3) {
+        } else if (modalitatJoc == Baralla.GIN_RUMMY) {
             GinRummy.jugarGinRummy();
-        } else if (modalitatJoc == 4) {
+        } else if (modalitatJoc == Baralla.RUMMY_ARGENTINO) {
             RummyArgentino.jugarRummyArgentino();
         }
     }
@@ -53,19 +53,19 @@ public class Joc {
     }
 
     static int determinarCartesInicials(int modalitat, int numJugadors) {
-        int cartes = 7; // valor per defecte
+        int cartes = 7;
         switch (modalitat) {
-            case 1: // rummy classic
+            case Baralla.RUMMY_CLASSIC:
                 if (numJugadors == 2) cartes = 10;
                 else if (numJugadors == 5 || numJugadors == 6) cartes = 6;
                 break;
-            case 2: // Rummikub
+            case Baralla.RUMMIKUB:
                 cartes = 14;
                 break;
-            case 3: // Gin Rummy
+            case Baralla.GIN_RUMMY:
                 cartes = 10;
                 break;
-            case 4: // Rummy Argentino
+            case Baralla.RUMMY_ARGENTINO:
                 cartes = 13;
                 break;
         }

@@ -2,6 +2,19 @@ import java.util.ArrayList;
 
 public class GinRummy extends Normes {
     static boolean esDePilaDescarts = false;
+    private static final int GUARDAR_PARTIDA = 2;
+    private static final int ACCIO_COMPLETADA = 1;
+    private static final int MOURE_POS_CARTES = 2;
+    private static final int TANCAR_RONDA = 3;
+
+    private static final int AGAFAR_CARTA_BARALLA = 1;
+    private static final int AGAFAR_CARTA_DESCARTADES = 2;
+
+    private static final int TANCAMENT_INVALID = 0;
+    private static final int TANCAMENT_BIG_GIN = 1;
+    private static final int TANCAMENT_GIN = 2;
+    private static final int TANCAMENT_KNOCK = 3;
+
 
     public static void jugarGinRummy() {
         GinRummy jocActual = new GinRummy();
@@ -18,7 +31,7 @@ public class GinRummy extends Normes {
                     hiHaGuanyadorRonda = true;
                 }
 
-                if (opcio == 2) {
+                if (opcio == GUARDAR_PARTIDA) {
                     Joc.guardarEstatPartida();
                 } else {
                     Consola.imprimirPuntsJugadors(Joc.arrayJugadors);
@@ -39,14 +52,14 @@ public class GinRummy extends Normes {
                     while (!accioCompletada) {
                         int accio = Consola.demanarAccioGinRummy();
 
-                        if (accio == 1) {
+                        if (accio == ACCIO_COMPLETADA) {
                             accioCompletada = true;
-                        } else if (accio == 2) {
+                        } else if (accio == MOURE_POS_CARTES) {
                             jocActual.mourePosCarta(jugadorActual);
-                        } else if (accio == 3) {
+                        } else if (accio == TANCAR_RONDA) {
                             int opcioTancament = jocActual.tancarRonda(jugadorActual);
 
-                            if (opcioTancament != 0) {
+                            if (opcioTancament != TANCAMENT_INVALID) {
                                 int indexRival;
                                 if (jugadorActual == Joc.arrayJugadors[0]) {
                                     indexRival = 1;
@@ -115,13 +128,13 @@ public class GinRummy extends Normes {
         Carta cartaAgafada = null;
         int opcioAgafar = Consola.demanarDonAgafar();
 
-        if (opcioAgafar == 1) {
+        if (opcioAgafar == AGAFAR_CARTA_BARALLA) {
             int midaBaralla = Joc.barallaPartida.baralla.size();
             cartaAgafada = Joc.barallaPartida.baralla.get(midaBaralla - 1);
             Joc.barallaPartida.baralla.remove(midaBaralla - 1);
             Consola.mostrarCartaRobada(cartaAgafada);
             esDePilaDescarts = false;
-        } else if (opcioAgafar == 2) {
+        } else if (opcioAgafar == AGAFAR_CARTA_DESCARTADES) {
             int midaPilaDescarts = Joc.pilaDescartades.size();
             cartaAgafada = Joc.pilaDescartades.get(midaPilaDescarts - 1);
             Joc.pilaDescartades.remove(midaPilaDescarts - 1);
@@ -317,15 +330,15 @@ public class GinRummy extends Normes {
         int puntsJugadorTancador = comptarPuntsCombinacio(jugadorQueHaTancat.maCartes);
         int puntsRival = comptarPuntsCombinacio(jugadorRival.getMaCartes());
 
-        if (opcioTancament == 1) {
+        if (opcioTancament == TANCAMENT_BIG_GIN) {
             int puntsGuanyats = puntsRival + 50;
             jugadorQueHaTancat.puntuacio += puntsGuanyats;
             Consola.missatgeBigGinGin(jugadorQueHaTancat);
-        } else if (opcioTancament == 2) {
+        } else if (opcioTancament == TANCAMENT_GIN) {
             int puntsGuanyats = puntsRival + 25;
             jugadorQueHaTancat.puntuacio += puntsGuanyats;
             Consola.missatgeGinGin(jugadorQueHaTancat);
-        } else if (opcioTancament == 3) {
+        } else if (opcioTancament == TANCAMENT_KNOCK) {
             if (puntsJugadorTancador < puntsRival) {
                 int puntsGuanyats = puntsRival - puntsJugadorTancador;
                 jugadorQueHaTancat.puntuacio += puntsGuanyats;
