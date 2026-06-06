@@ -3,7 +3,6 @@ public class Carta  implements Serializable {
     String numero;
     String palOColor;
     int valor;
-    boolean esPotMoure = true;
 
     public Carta(String numero, String palOColor, int valor){
         this.numero = numero;
@@ -26,10 +25,6 @@ public class Carta  implements Serializable {
     }
 
     public String getPalOColor(){ return palOColor; }
-
-    public void setEsPotMoure(boolean estat){ this.esPotMoure = estat; }
-
-    public boolean getEsPotMoure() { return  this.esPotMoure;}
 
     @Override
     public String toString() {

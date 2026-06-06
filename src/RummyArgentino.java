@@ -38,14 +38,14 @@ public class RummyArgentino extends Normes {
 
                     boolean accioCompletada = false;
                     while (!accioCompletada) {
-                        int accio = Consola.demanarAccioRummyClassic();
+                        int accio = Consola.demanarQueFerRummyArgentino();
 
                         if (accio == 1) {
                             accioCompletada = true;
                         } else if (accio == 2) {
                             jocActual.tirarCombinacions(jugadorActual);
                         } else if (accio == 3) {
-                            jocActual.afegirFitxaCombinacio(jugadorActual);
+                            jocActual.modificarTaula(jugadorActual);
                         }
 
                         hiHaGuanyadorRonda = jocActual.guanyadorRonda(jugadorActual);
@@ -202,7 +202,6 @@ public class RummyArgentino extends Normes {
                 jugador.maCartes.addAll(combinacioNova);
                 ordenarCartes(jugador.maCartes);
             } else {
-                actualitzarMobilitatComodins(combinacioNova);
                 combinacionsNoves.add(combinacioNova);
                 totalJokersJugada += numJokersCombi;
                 totalMonosJugada += numMonosCombi;
@@ -236,6 +235,61 @@ public class RummyArgentino extends Normes {
         return true;
     }
 
+    private boolean modificarTaula(Jugador jugador) {
+        ArrayList<Carta> copiaMaInicial = new ArrayList<>(jugador.getMaCartes());
+        ArrayList<ArrayList<Carta>> copiaTaulaInicial = new ArrayList<>();
+
+        for (int i = 0; i < Joc.taulaComuna.size(); i++) {
+            ArrayList<Carta> combinacioActu = new ArrayList<>(Joc.taulaComuna.get(i));
+            copiaTaulaInicial.add(combinacioActu);
+        }
+
+        int numCartesMaJugador = jugador.maCartes.size();
+        boolean seguirModificant = true;
+
+        while (seguirModificant && !jugador.maCartes.isEmpty()) {
+            Consola.espais();
+            Consola.missatgeMostrarTaula();
+            Consola.mostrarTaulaComuna(Joc.taulaComuna);
+            Consola.espais();
+            Consola.missatgeCartes();
+            Consola.mostrarMaCartes(jugador.maCartes);
+            Consola.espais();
+
+            int opcio = Consola.demanarQueModificarArgentino();
+
+            if (opcio == 1) {
+                seguirModificant = false;
+            } else if (opcio == 2) {
+                afegirFitxaCombinacio(jugador);
+            } else if (opcio == 3) {
+                substituirComodi(jugador);
+            }
+        }
+
+        for (int i = 0; i < Joc.taulaComuna.size(); i++) {
+            if (!esCombinacioValida(Joc.taulaComuna.get(i))) {
+                Consola.missatgeModificacioNoValida();
+                jugador.maCartes.clear();
+                jugador.maCartes.addAll(copiaMaInicial);
+                Joc.taulaComuna.clear();
+                Joc.taulaComuna.addAll(copiaTaulaInicial);
+                return false;
+            }
+        }
+
+        if (jugador.maCartes.size() >= numCartesMaJugador) {
+            Consola.missatgeMinimTirarUnaCarta();
+            jugador.maCartes.clear();
+            jugador.maCartes.addAll(copiaMaInicial);
+            Joc.taulaComuna.clear();
+            Joc.taulaComuna.addAll(copiaTaulaInicial);
+            return false;
+        }
+        Consola.missatgeModificacioValida();
+        return true;
+    }
+
     private int numMonosCombinacio(ArrayList<Carta> combinacio) {
         int numMonos = 0;
         for (int i = 0; i < combinacio.size(); i++) {
@@ -258,27 +312,48 @@ public class RummyArgentino extends Normes {
         return numJokers;
     }
 
-    private void actualitzarMobilitatComodins(ArrayList<Carta> combinacio) {
-        for (int i = 0; i < combinacio.size(); i++) {
-            Carta carta = combinacio.get(i);
+    private void substituirComodi(Jugador jugador) {
+        int moureCombincioExistent = 1;
+        int moureNovaCombinacio = 2;
 
-            if (carta.esJoker() || carta.esMono()) {
-                if (i > 0 && i < combinacio.size() - 1) {
-                    Carta cAnterior = combinacio.get(i - 1);
-                    Carta cSeguent = combinacio.get(i + 1);
+        int indexOrigen = Consola.demanarIndexCombinacio(Joc.taulaComuna);
+        if (indexOrigen < 0 || indexOrigen >= Joc.taulaComuna.size()) {
+            Consola.missatgeIndexNoValid();
+            return;
+        }
 
-                    if (!cAnterior.esJoker() && !cAnterior.esMono() && !cSeguent.esJoker() && !cSeguent.esMono()) {
-                        carta.setEsPotMoure(false);
-                    } else {
-                        carta.setEsPotMoure(true);
-                    }
-                }
-            } else {
-                carta.setEsPotMoure(true);
-            }
+        int indexCartaASubstituir = Consola.demanarIndexCarta(Joc.taulaComuna.get(indexOrigen));
+        if (indexCartaASubstituir < 0 || indexCartaASubstituir >= Joc.taulaComuna.get(indexOrigen).size()) {
+            Consola.missatgeIndexNoValid();
+            return;
+        }
+
+        Carta cartaASubstituir = Joc.taulaComuna.get(indexOrigen).get(indexCartaASubstituir);
+        if (!cartaASubstituir.esMono() && !cartaASubstituir.esJoker()) {
+            System.out.println("No es pot moure una carta que NO sigui un comodi");
+            return;
+        }
+
+        int indexCartaSubstitueix = Consola.demanarIndexCarta(jugador.maCartes);
+        Carta cartaQueSubstitueix = jugador.maCartes.get(indexCartaSubstitueix);
+
+
+        if (indexCartaSubstitueix < 0 || indexCartaSubstitueix >= jugador.maCartes.size()) {
+            Consola.missatgeIndexNoValid();
+            return;
+        }
+
+        Joc.taulaComuna.get(indexOrigen).add(indexOrigen, cartaQueSubstitueix);
+        jugador.maCartes.remove(indexCartaSubstitueix);
+
+        int opcio = Consola.demanarOnMoure();
+
+        if (opcio == moureCombincioExistent) {
+            moureFitxaEntreCombinacions(cartaASubstituir);
+        } else if (opcio == moureNovaCombinacio) {
+            moureFitxaNovaCombinacio(cartaASubstituir);
         }
     }
-
 
     private void afegirFitxaCombinacio(Jugador jugador) {
         int indexCarta = Consola.demanarIndexCarta(jugador.maCartes);
@@ -306,6 +381,38 @@ public class RummyArgentino extends Normes {
         Consola.missatgeCartaAfegida(indexPosicio, indexCombinacio);
     }
 
+    private void moureFitxaEntreCombinacions(Carta cartaAMoure) {
+        int indexDesti = Consola.demanarIndexCombinacio(Joc.taulaComuna);
+        if (indexDesti < 0 || indexDesti >= Joc.taulaComuna.size()) {
+            Consola.missatgeIndexNoValid();
+            return;
+        }
+
+        ArrayList<Carta> combinacioDesti = Joc.taulaComuna.get(indexDesti);
+        int indexPosicio = Consola.demanarPosicioDinsCombiancio(combinacioDesti);
+        if (indexPosicio < 0 || indexPosicio > combinacioDesti.size()) {
+            Consola.missatgePosicioNoValida();
+            return;
+        }
+
+        combinacioDesti.add(indexPosicio, cartaAMoure);
+        Consola.missatgeCartaAfegida(indexPosicio, indexDesti);
+
+    }
+
+    private void moureFitxaNovaCombinacio(Carta cartaAMoure) {
+        ArrayList<Carta> indexNou = new ArrayList<>();
+        Joc.taulaComuna.add(indexNou);
+
+        ArrayList<Carta> indexDesti = Joc.taulaComuna.getLast();
+        int posDarrerIndex = Joc.taulaComuna.size();
+
+        ArrayList<Carta> combinacioDesti = indexDesti;
+
+        combinacioDesti.add(cartaAMoure);
+        Consola.missatgeCartaAfegida(0, posDarrerIndex);
+    }
+
     private void descartarCarta(Jugador jugadorActual, Carta cartaAgafada) {
         boolean haDescartatCarta = false;
         while (!haDescartatCarta) {
@@ -323,10 +430,6 @@ public class RummyArgentino extends Normes {
             }
         }
     }
-
-
-
-
 
     private int comptarPunts(ArrayList<Carta> cartesJugador) {
         int punts = 0;

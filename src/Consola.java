@@ -307,6 +307,51 @@ public class Consola {
         return opcio;
     }
 
+    public static int demanarOnMoure() {
+        int opcio = -1;
+        while (opcio != 1 && opcio != 2) {
+            System.out.println("Tria on vols moure el comodi: 1. Combinacio existent, 2. Nova combinacio");
+            opcio = scanner.nextInt();
+            scanner.nextLine();
+            if (opcio != 1 && opcio != 2) {
+                System.out.println("Opció no vàlida, torna a truar");
+            }
+        }
+        return opcio;
+    }
+
+    public static int demanarQueFerRummyArgentino() {
+        int opcio = -1;
+        while (opcio != 1 && opcio != 2 && opcio != 3) {
+            System.out.println("Tria que vols modificar:");
+            System.out.println("1. Sortir/ acabar torn");
+            System.out.println("2. Tirar combinacions");
+            System.out.println("3. Modificar el tauler");
+            opcio = scanner.nextInt();
+            scanner.nextLine();
+            if (opcio != 1 && opcio != 2 && opcio != 3) {
+                System.out.println("Opció no vàlida, torna a truar");
+            }
+        }
+        return opcio;
+    }
+
+    public static int demanarQueModificarArgentino() {
+        int opcio = -1;
+        while (opcio != 1 && opcio != 2 && opcio != 3) {
+            System.out.println("Tria que vols modificar:");
+            System.out.println("1. Acabar/Sortir de les modificacions");
+            System.out.println("2. Afrgir una carta a una combinació existent");
+            System.out.println("3. Substituir un comodi per una carta de la ma, i moure el comodi");
+            opcio = scanner.nextInt();
+            scanner.nextLine();
+            if (opcio != 1 && opcio != 2 && opcio != 3) {
+                System.out.println("Opció no vàlida, torna a truar");
+            }
+        }
+        return opcio;
+    }
+
     public static int numPuntsGuanyar(int numJugadors) {
         int numPunts = 0;
         int puntsMinims = 0;
