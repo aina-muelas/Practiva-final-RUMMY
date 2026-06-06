@@ -143,6 +143,8 @@ public class RummyArgentino extends Normes {
     private boolean tirarCombinacions(Jugador jugador) {
         int puntsCombinacio = 0;
         boolean supera700 = maCartesSupera700(jugador);
+        int totalJokersJugada = 0;
+        int totalMonosJugada = 0;
         ArrayList<Carta> copiaMaInicial = new ArrayList<>(jugador.getMaCartes());
 
         boolean seguirCreant = true;
@@ -160,12 +162,30 @@ public class RummyArgentino extends Normes {
 
             combinacioNova = Normes.ordenarCombinacions(combinacioNova);
 
+            int numMonosCombi = numMonosCombinacio(combinacioNova);
+            int numJokersCombi = numJokersCombinacio(combinacioNova);
+
+            boolean esGrup = esGrupValid(combinacioNova);
+            if (esGrup && (numJokersCombi + numMonosCombi > 1)) {
+                Consola.missatgeNumComodinsInvalidArgentino();
+                jugador.maCartes.addAll(combinacioNova);
+                ordenarCartes(jugador.maCartes);
+            }
+
+            if ((totalJokersJugada + numJokersCombi >= 3) || (totalMonosJugada + numMonosCombi >= 3)) {
+                Consola.missatgeNumComodinsTotalsInvalidArgentino();
+                jugador.maCartes.addAll(combinacioNova);
+                ordenarCartes(jugador.maCartes);
+            }
+
             if (!esCombinacioValida(combinacioNova)) {
                 Consola.missatgeCombinacioNoValida();
                 jugador.maCartes.addAll(combinacioNova);
                 ordenarCartes(jugador.maCartes);
             } else {
                 combinacionsNoves.add(combinacioNova);
+                totalJokersJugada += numJokersCombi;
+                totalMonosJugada += numMonosCombi;
             }
             seguirCreant = Consola.seguirCreantCombinacions(jugador);
         }
@@ -194,8 +214,30 @@ public class RummyArgentino extends Normes {
             }
         }
         return true;
-
     }
+
+    private int numMonosCombinacio(ArrayList<Carta> combinacio) {
+        int numMonos = 0;
+        for (int i = 0; i < combinacio.size(); i++) {
+            Carta cartaActual = combinacio.get(i);
+            if (cartaActual.esMono()) {
+                numMonos++;
+            }
+        }
+        return numMonos;
+    }
+
+    private int numJokersCombinacio(ArrayList<Carta> combinacio) {
+        int numJokers = 0;
+        for (int i = 0; i < combinacio.size(); i++) {
+            Carta cartaActual = combinacio.get(i);
+            if (cartaActual.esJoker()) {
+                numJokers++;
+            }
+        }
+        return numJokers;
+    }
+
 
     private void afegirFitxaCombinacio(Jugador jugador) {
         int indexCarta = Consola.demanarIndexCarta(jugador.maCartes);
@@ -275,26 +317,42 @@ public class RummyArgentino extends Normes {
         boolean esGrup = esGrupValid(combinacio);
         boolean esEscala = esEscalaValida(combinacio);
 
-        int indexFitxaReal = -1;
-        int valorFitxaReal = 0;
+        int rangReferencia = -1;
+        int indexReferencia = -1;
 
         for (int i = 0; i < combinacio.size(); i++) {
-            if (!combinacio.get(i).esJoker()) {
-                indexFitxaReal = i;
-                valorFitxaReal = combinacio.get(i).getValor();
+            Carta carta = combinacio.get(i);
+            if (!carta.esJoker() && !carta.esMono()) {
+                rangReferencia = agafarRang(carta);
+                indexReferencia = i;
                 break;
             }
         }
 
         for (int i = 0; i < combinacio.size(); i++) {
-            if (!combinacio.get(i).esJoker()) {
-                punts += combinacio.get(i).getValor();
-            } else {
+            Carta cartaActual = combinacio.get(i);
+
+            if(cartaActual.esJoker()) {
+                punts += 50;
+            } else if (cartaActual.esMono()) {
+                int rangSuplantat;
                 if (esGrup) {
-                    punts += valorFitxaReal;
-                } else if (esEscala) {
-                    punts += valorFitxaReal + (i - indexFitxaReal);
+                    rangSuplantat = rangReferencia;
+                } else {
+                    rangSuplantat = rangReferencia + (i - indexReferencia);
                 }
+
+                if (rangSuplantat >= 3 && rangSuplantat <= 7) {
+                    punts += 5;
+                } else if (rangSuplantat == 1) {
+                    punts += 15;
+                } else if (rangSuplantat == 2) {
+                    punts += 5;
+                } else {
+                    punts += 20;
+                }
+            } else {
+                punts += obtenirValorCarta(cartaActual);
             }
         }
         return punts;
@@ -322,6 +380,10 @@ public class RummyArgentino extends Normes {
 
     @Override
     public boolean haGuanyat(Jugador jugador) {
+        if (jugador.puntuacio >= numPuntsGuanyar) {
+            Consola.missatgeGuanyador(jugador);
+            return true;
+        }
         return false;
     }
 }

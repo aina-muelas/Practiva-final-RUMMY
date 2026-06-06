@@ -404,7 +404,7 @@ public class Consola {
     public static void missatgeGuanyadorRonda(Jugador jugador, int puntuacio) { System.out.println("Enhorabona " + jugador.nom + " has guanyat la ronda la ronda amb, ara tens " + puntuacio + " punts"); }
 
     // comentaris rummy argentini
-    public static void missatgeMaSupera700() {
-        System.out.println("la teva ma de cartes supera els 700 punts, a la tirada n'has de fer minim 100");
-    }
+    public static void missatgeMaSupera700() { System.out.println("la teva ma de cartes supera els 700 punts, a la tirada n'has de fer minim 100"); }
+    public static void missatgeNumComodinsInvalidArgentino() { System.out.println("Error, a un grup NOMES pot haver 1 comodi"); }
+    public static void missatgeNumComodinsTotalsInvalidArgentino() { System.out.println("Error, a una jugada no pots tirar 3 comodins del mateix tipus (joker o mono) a una mateixa jugada"); }
 }
