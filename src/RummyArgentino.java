@@ -120,6 +120,25 @@ public class RummyArgentino extends Normes {
         Consola.espais();
     }
 
+    private int obtenirValorCarta(Carta carta) {
+        String numero = carta.numero;
+
+        if (carta.esJoker()) {
+            return 50;
+        } else if (carta.esMono()) {
+            return 20;
+        } else if (numero.equals("AS")) {
+            return 15;
+        } else if (numero.equals("8") || numero.equals("9") || numero.equals("10")
+                || numero.equals("J") || numero.equals("Q") || numero.equals("K")) {
+            return 10;
+        } else if (numero.equals("2") || numero.equals("3") || numero.equals("4")
+                || numero.equals("5") || numero.equals("6") || numero.equals("7")) {
+            return 5;
+        }
+        return 0;
+    }
+
     private Carta agafarCarta() {
         Carta cartaAgafada = null;
         int opcioAgafar = Consola.demanarDonAgafar();
@@ -183,6 +202,7 @@ public class RummyArgentino extends Normes {
                 jugador.maCartes.addAll(combinacioNova);
                 ordenarCartes(jugador.maCartes);
             } else {
+                actualitzarMobilitatComodins(combinacioNova);
                 combinacionsNoves.add(combinacioNova);
                 totalJokersJugada += numJokersCombi;
                 totalMonosJugada += numMonosCombi;
@@ -238,6 +258,27 @@ public class RummyArgentino extends Normes {
         return numJokers;
     }
 
+    private void actualitzarMobilitatComodins(ArrayList<Carta> combinacio) {
+        for (int i = 0; i < combinacio.size(); i++) {
+            Carta carta = combinacio.get(i);
+
+            if (carta.esJoker() || carta.esMono()) {
+                if (i > 0 && i < combinacio.size() - 1) {
+                    Carta cAnterior = combinacio.get(i - 1);
+                    Carta cSeguent = combinacio.get(i + 1);
+
+                    if (!cAnterior.esJoker() && !cAnterior.esMono() && !cSeguent.esJoker() && !cSeguent.esMono()) {
+                        carta.setEsPotMoure(false);
+                    } else {
+                        carta.setEsPotMoure(true);
+                    }
+                }
+            } else {
+                carta.setEsPotMoure(true);
+            }
+        }
+    }
+
 
     private void afegirFitxaCombinacio(Jugador jugador) {
         int indexCarta = Consola.demanarIndexCarta(jugador.maCartes);
@@ -283,24 +324,9 @@ public class RummyArgentino extends Normes {
         }
     }
 
-    private int obtenirValorCarta(Carta carta) {
-        String numero = carta.numero;
 
-        if (carta.esJoker()) {
-            return 50;
-        } else if (carta.esMono()) {
-            return 20;
-        } else if (numero.equals("AS")) {
-            return 15;
-        } else if (numero.equals("8") || numero.equals("9") || numero.equals("10")
-                || numero.equals("J") || numero.equals("Q") || numero.equals("K")) {
-            return 10;
-        } else if (numero.equals("2") || numero.equals("3") || numero.equals("4")
-                || numero.equals("5") || numero.equals("6") || numero.equals("7")) {
-            return 5;
-        }
-        return 0;
-    }
+
+
 
     private int comptarPunts(ArrayList<Carta> cartesJugador) {
         int punts = 0;
