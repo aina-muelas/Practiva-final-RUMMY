@@ -30,21 +30,18 @@ public class GinRummy extends Normes {
                 if (opcio == GUARDAR_PARTIDA) {
                     Joc.guardarEstatPartida();
                 } else {
+                    boolean accioCompletada = false;
                     Consola.imprimirPuntsJugadors(Joc.arrayJugadors);
-
                     Jugador jugadorActual = Joc.arrayJugadors[Torn.jugaActual];
 
                     jocActual.mostrarInfoGeneralAJugador(jugadorActual);
                     jocActual.mostrarInfoAgafarCartaBarallaODescartades();
-
                     Carta cartaAgafada = jocActual.agafarCarta();
                     jugadorActual.maCartes.add(cartaAgafada);
 
                     EvaluarMa millorMa = jocActual.calcularCombinacions(jugadorActual.maCartes);
                     jocActual.combinacionsOrdenades(millorMa.combinacionsPossibles);
                     jocActual.imprimirMillorMa(millorMa);
-
-                    boolean accioCompletada = false;
 
                     while (!accioCompletada) {
                         int accio = Consola.demanarAccioGinRummy();

@@ -37,12 +37,8 @@ public class Rummikub extends Normes {
                 jocActual.mostrarTaulaComuna();
                 jocActual.mostrarInfoGeneralAJugador(jugadorActual);
 
-                if (jugadorActual.haFetPrimeraTirada) {
-                    primerTornAcabat = true;
-                }
-                if (esDarreraRonda) {
-                    Consola.missatgeDarreraRonda();
-                }
+                if (jugadorActual.haFetPrimeraTirada) { primerTornAcabat = true; }
+                if (esDarreraRonda) { Consola.missatgeDarreraRonda(); }
 
                 while (!accioCompletada) {
                     Consola.imprimirNumFitxesBaralla(Joc.barallaPartida.baralla);
@@ -188,9 +184,7 @@ public class Rummikub extends Normes {
         boolean seguirModificant = true;
 
         while (seguirModificant && !jugador.maCartes.isEmpty()) {
-            Consola.espais();
-            Consola.missatgeMostrarTaula();
-            Consola.mostrarTaulaComuna(Joc.taulaComuna);
+            mostrarTaulaComuna();
             Consola.espais();
             Consola.missatgeCartes();
             Consola.mostrarMaCartes(jugador.maCartes);
@@ -316,7 +310,7 @@ public class Rummikub extends Normes {
 
         Carta carta = Joc.taulaComuna.get(indexOrigen).remove(indexCarta);
         combinacioDesti.add(carta);
-        Consola.missatgeCartaAfegida(0, posDarrerIndex -1);
+        Consola.missatgeCartaAfegida(0, posDarrerIndex - 1);
 
         if (Joc.taulaComuna.get(indexOrigen).size() == 0) {
             Joc.taulaComuna.remove(indexOrigen);

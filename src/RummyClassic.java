@@ -11,7 +11,6 @@ public class RummyClassic extends Normes {
     public static void jugarRummyClassic() {
         RummyClassic jocActual = new RummyClassic();
         numPuntsGuanyar = Consola.numPuntsGuanyar(Joc.numJugadors);
-
         boolean hiHaGuanyadorPartida = false;
 
         while (!hiHaGuanyadorPartida) {
@@ -42,7 +41,6 @@ public class RummyClassic extends Normes {
                     boolean accioCompletada = false;
                     while (!accioCompletada) {
                         int accio = Consola.demanarAccioRummyClassic();
-
                         if (accio == FINALITZAR_TORN) {
                             accioCompletada = true;
                         } else if (accio == TIRAR_COMBINACIONS) {
@@ -55,7 +53,6 @@ public class RummyClassic extends Normes {
                         if (hiHaGuanyadorRonda) {
                             hiHaGuanyadorPartida = jocActual.haGuanyat(jugadorActual);
                             accioCompletada = true;
-
                         }
                     }
 
@@ -65,7 +62,6 @@ public class RummyClassic extends Normes {
 
                         if (hiHaGuanyadorRonda) {
                             hiHaGuanyadorPartida = jocActual.haGuanyat(jugadorActual);
-
                         }
                     }
 
