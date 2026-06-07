@@ -4,17 +4,17 @@ import java.util.Collections;
 
 public class Baralla implements Serializable {
     ArrayList<Carta> baralla = new ArrayList<Carta>();
-    final String[] numerosFrancesa = {"AS", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
-    final int[] valorsFrancesa = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10};
-    final String joker = "Joker";
-    final String[] palsFrancesa = {"Pica", "Trevol", "Cor", "Diamant"};
+    private final String[] numerosFrancesa = {"AS", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
+    private final int[] valorsFrancesa = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10};
+    private final String joker = "Joker";
+    private final String[] palsFrancesa = {"Pica", "Trevol", "Cor", "Diamant"};
 
-    final String[] colorsRummiKub = {"Vermell", "Blau", "Groc", "Negre"};
+    private final String[] colorsRummiKub = {"Vermell", "Blau", "Groc", "Negre"};
 
-    final int RUMMY_CLASSIC = 1;
-    final int RUMMIKUB = 2;
-    final int GIN_RUMMY = 3;
-    final int RUMMY_ARGENTINO = 4;
+    public final static int RUMMY_CLASSIC = 1;
+    public final static int RUMMIKUB = 2;
+    public final static int GIN_RUMMY = 3;
+    public final static int RUMMY_ARGENTINO = 4;
 
     public void inicialitzarBaralla(int modalitat, int numBaralles) {
         baralla.clear();
@@ -24,7 +24,7 @@ public class Baralla implements Serializable {
             for (int i = 0; i < numBaralles; i++) {
                 crearBarallaRummyArgentino();
             }
-        } else {
+        } else if (modalitat == RUMMY_CLASSIC || modalitat == GIN_RUMMY){
             for (int i = 0; i < numBaralles; i++) {
                 crearBarallaFrancesaEstandard();
             }
@@ -61,14 +61,14 @@ public class Baralla implements Serializable {
         baralla.add(new Carta(joker, "Comodí", 0));
     }
 
-    static int determinarQuantitatBaralles(int modalitat, int numJugadors) {
-        if (modalitat == 1) {
+    public static int determinarQuantitatBaralles(int modalitat, int numJugadors) {
+        if (modalitat == RUMMY_CLASSIC) {
             return 1;
-        } else if (modalitat == 2) {
+        } else if (modalitat == RUMMIKUB) {
             return 2;
-        } else if (modalitat == 3) {
+        } else if (modalitat == GIN_RUMMY) {
             return 1;
-        } else if (modalitat == 4) {
+        } else if (modalitat == RUMMY_ARGENTINO) {
             if (numJugadors > 4) {
                 return 2;
             } else {

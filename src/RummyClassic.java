@@ -2,14 +2,15 @@ import java.util.ArrayList;
 
 public class RummyClassic extends Normes {
 
+    private static final int FINALITZAR_TORN = 1;
+    private static final int TIRAR_COMBINACIONS = 2;
+    private static final int MODIFICAR_COMBINACIONS = 3;
 
     private static int numPuntsGuanyar;
-    private static boolean esDePilaDescarts = false;
 
     public static void jugarRummyClassic() {
         RummyClassic jocActual = new RummyClassic();
         numPuntsGuanyar = Consola.numPuntsGuanyar(Joc.numJugadors);
-
         boolean hiHaGuanyadorPartida = false;
 
         while (!hiHaGuanyadorPartida) {
@@ -19,7 +20,7 @@ public class RummyClassic extends Normes {
             while (!hiHaGuanyadorRonda) {
                 int opcio = Consola.demanarSiVolJugarOGuardar();
 
-                if (opcio == 2) {
+                if (opcio == GUARDAR_PARTIDA) {
                     Joc.guardarEstatPartida();
                 } else {
                     if (Joc.barallaPartida.baralla.isEmpty()) {
@@ -28,9 +29,10 @@ public class RummyClassic extends Normes {
 
                     Consola.imprimirPuntsJugadors(Joc.arrayJugadors);
                     Jugador jugadorActual = Joc.arrayJugadors[Torn.jugaActual];
-                    jocActual.mostrarInfoAJugador(jugadorActual);
+                    jocActual.mostrarTaulaComuna();
+                    jocActual.mostrarInfoGeneralAJugador(jugadorActual);
+                    jocActual.mostrarInfoAgafarCartaBarallaODescartades();
 
-                    esDePilaDescarts = false;
                     Carta cartaAgafada = jocActual.agafarCarta();
                     jugadorActual.maCartes.add(cartaAgafada);
                     ordenarCartes(jugadorActual.maCartes);
@@ -39,12 +41,11 @@ public class RummyClassic extends Normes {
                     boolean accioCompletada = false;
                     while (!accioCompletada) {
                         int accio = Consola.demanarAccioRummyClassic();
-
-                        if (accio == 1) {
+                        if (accio == FINALITZAR_TORN) {
                             accioCompletada = true;
-                        } else if (accio == 2) {
+                        } else if (accio == TIRAR_COMBINACIONS) {
                             jocActual.tirarCombinacions(jugadorActual);
-                        } else if (accio == 3) {
+                        } else if (accio == MODIFICAR_COMBINACIONS) {
                             jocActual.afegirFitxaCombinacio(jugadorActual);
                         }
 
@@ -52,7 +53,6 @@ public class RummyClassic extends Normes {
                         if (hiHaGuanyadorRonda) {
                             hiHaGuanyadorPartida = jocActual.haGuanyat(jugadorActual);
                             accioCompletada = true;
-
                         }
                     }
 
@@ -62,7 +62,6 @@ public class RummyClassic extends Normes {
 
                         if (hiHaGuanyadorRonda) {
                             hiHaGuanyadorPartida = jocActual.haGuanyat(jugadorActual);
-
                         }
                     }
 
@@ -81,8 +80,8 @@ public class RummyClassic extends Normes {
             Joc.arrayJugadors[i].maCartes.clear();
         }
 
-        int numBaralles = Baralla.determinarQuantitatBaralles(1, Joc.arrayJugadors.length);
-        Joc.barallaPartida.inicialitzarBaralla(1, numBaralles);
+        int numBaralles = Baralla.determinarQuantitatBaralles(Baralla.RUMMY_CLASSIC, Joc.arrayJugadors.length);
+        Joc.barallaPartida.inicialitzarBaralla(Baralla.RUMMY_CLASSIC, numBaralles);
         Joc.barallaPartida.mesclarCartes();
         Joc.repartirCartes(Joc.barallaPartida);
 
@@ -94,49 +93,6 @@ public class RummyClassic extends Normes {
         Carta cartaInicial = Joc.barallaPartida.baralla.get(tamanyBaralla - 1);
         Joc.barallaPartida.baralla.remove(tamanyBaralla - 1);
         Joc.pilaDescartades.add(cartaInicial);
-    }
-
-    private void restaurarBarallaSiEstaBuida() {
-        Carta cartaAAfegir = Joc.pilaDescartades.getLast();
-        Joc.pilaDescartades.remove(Joc.pilaDescartades.size() - 1);
-
-        Joc.barallaPartida.baralla.addAll(Joc.pilaDescartades);
-        Joc.barallaPartida.mesclarCartes();
-        Joc.pilaDescartades.clear();
-        Joc.pilaDescartades.add(cartaAAfegir);
-    }
-
-    private void mostrarInfoAJugador(Jugador jugadorActual) {
-        Consola.tornDe(jugadorActual.nom);
-        Consola.espais();
-        Consola.mostrarTaulaComuna(Joc.taulaComuna);
-        Consola.espais();
-        Consola.missatgeCartes();
-        Consola.mostrarMaCartes(jugadorActual.maCartes);
-        Consola.espais();
-        Consola.imprimirNumFitxesBaralla(Joc.barallaPartida.baralla);
-        Consola.darreraCartaPilaDescards(Joc.pilaDescartades.getLast());
-        Consola.espais();
-    }
-
-    private Carta agafarCarta() {
-        Carta cartaAgafada = null;
-        int opcioAgafar = Consola.demanarDonAgafar();
-
-        if (opcioAgafar == 1) {
-            int midaBaralla = Joc.barallaPartida.baralla.size();
-            cartaAgafada = Joc.barallaPartida.baralla.get(midaBaralla - 1);
-            Joc.barallaPartida.baralla.remove(midaBaralla - 1);
-            Consola.mostrarCartaRobada(cartaAgafada);
-            esDePilaDescarts = false;
-        } else if (opcioAgafar == 2) {
-            int midaPilaDescarts = Joc.pilaDescartades.size();
-            cartaAgafada = Joc.pilaDescartades.get(midaPilaDescarts - 1);
-            Joc.pilaDescartades.remove(midaPilaDescarts - 1);
-            Consola.mostrarCartaRobada(cartaAgafada);
-            esDePilaDescarts = true;
-        }
-        return cartaAgafada;
     }
 
     private boolean tirarCombinacions(Jugador jugador) {
@@ -204,42 +160,13 @@ public class RummyClassic extends Normes {
         Consola.missatgeCartaAfegida(indexPosicio, indexCombinacio);
     }
 
-    private void descartarCarta(Jugador jugadorActual, Carta cartaAgafada) {
-        boolean haDescartatCarta = false;
-        while (!haDescartatCarta) {
-            Consola.missatgeTriarCartaDescartar();
-            int numCartaDescartar = Consola.demanarIndexCarta(jugadorActual.maCartes);
-            Carta cartaQueVolDescartar = jugadorActual.maCartes.get(numCartaDescartar);
-
-            if (cartaAgafada.equals(cartaQueVolDescartar) && esDePilaDescarts) {
-                Consola.missatgeNoEsPotDescartar(cartaQueVolDescartar);
-            } else {
-                Joc.pilaDescartades.add(cartaQueVolDescartar);
-                jugadorActual.maCartes.remove(numCartaDescartar);
-                Consola.missatgeSiEsPotDescartar(cartaQueVolDescartar);
-                haDescartatCarta = true;
-            }
-        }
-    }
-
-    private int comptarPunts(ArrayList<Carta> cartesJugador) {
-        int punts = 0;
-
-        for (int i = 0; i < cartesJugador.size(); i++) {
-            if (cartesJugador.get(i).esAS()) {
-                punts += 15;
-            } else {
-                punts += cartesJugador.get(i).getValor();
-            }
-        }
-        return punts;
-    }
-
     private boolean guanyadorRonda(Jugador jugadorActual) {
         if (jugadorActual.maCartes.isEmpty()) {
             for (int i = 0; i < Joc.arrayJugadors.length; i++) {
                 if (Joc.arrayJugadors[i] != jugadorActual) {
-                    jugadorActual.puntuacio += comptarPunts(Joc.arrayJugadors[i].maCartes);
+                    Jugador jugadorRivalActu = Joc.arrayJugadors[i];
+                    calcularPuntsMa(jugadorRivalActu);
+                    jugadorActual.puntuacio += jugadorRivalActu.puntsMa;
                 }
             }
             Consola.missatgeGuanyadorRonda(jugadorActual, jugadorActual.puntuacio);
@@ -247,8 +174,6 @@ public class RummyClassic extends Normes {
         }
         return false;
     }
-
-
 
     @Override
     public boolean haGuanyat(Jugador jugador) {
@@ -258,4 +183,18 @@ public class RummyClassic extends Normes {
         }
         return false;
     }
+
+    public void calcularPuntsMa(Jugador jugador) {
+        jugador.puntsMa = 0;
+
+        for (int i = 0; i < jugador.maCartes.size(); i++) {
+            Carta cartaActual = jugador.maCartes.get(i);
+            if (cartaActual.esAS()) {
+                jugador.puntsMa += 15;
+            } else {
+                jugador.puntsMa += cartaActual.getValor();
+            }
+        }
+    }
+
 }

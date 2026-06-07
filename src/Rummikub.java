@@ -2,6 +2,16 @@ import java.util.ArrayList;
 
 public class Rummikub extends Normes {
 
+    private static final int AGAFAR_FITXA = 1;
+    private static final int TIRAR_COMBINACIONS = 2;
+    private static final int MODIFICAR_COMBINACIONS = 3;
+    private static final int FINALITZAR_TORN = 4;
+
+    private static final int ACABAR_MODIFICACIONS = 0;
+    private static final int AFEGIR_FITXA_COMBINACIO = 1;
+    private static final int MOURE_FITXA_COMBI_EXISTENT = 2;
+    private static final int MOURE_FITXA_COMBI_NOVA = 3;
+
     public static void jugarRummiKub() {
         Rummikub jocActual = new Rummikub();
 
@@ -13,32 +23,22 @@ public class Rummikub extends Normes {
         while (!hiHaGuanyador) {
             int opcio = Consola.demanarSiVolJugarOGuardar();
 
-            if (opcio == 2) {
+            if (opcio == GUARDAR_PARTIDA) {
                 Joc.guardarEstatPartida();
             } else {
-                Consola.espais();
-                Consola.missatgeMostrarTaula();
-                Consola.mostrarTaulaComuna(Joc.taulaComuna);
-                Consola.espais();
 
                 boolean haTocatTauler = false;
                 boolean accioCompletada = false;
                 int accio;
 
                 Jugador jugadorActual = Joc.arrayJugadors[Torn.jugaActual];
-                Consola.tornDe(jugadorActual.nom);
-                Consola.espais();
-                Consola.missatgeCartes();
                 ordenarCartes(jugadorActual.maCartes);
-                Consola.mostrarMaCartes(jugadorActual.maCartes);
-                Consola.espais();
 
-                if (jugadorActual.haFetPrimeraTirada) {
-                    primerTornAcabat = true;
-                }
-                if (esDarreraRonda) {
-                    Consola.missatgeDarreraRonda();
-                }
+                jocActual.mostrarTaulaComuna();
+                jocActual.mostrarInfoGeneralAJugador(jugadorActual);
+
+                if (jugadorActual.haFetPrimeraTirada) { primerTornAcabat = true; }
+                if (esDarreraRonda) { Consola.missatgeDarreraRonda(); }
 
                 while (!accioCompletada) {
                     Consola.imprimirNumFitxesBaralla(Joc.barallaPartida.baralla);
@@ -47,18 +47,18 @@ public class Rummikub extends Normes {
                     boolean barallabuida = Joc.barallaPartida.baralla.isEmpty();
                     accio = Consola.demanarAccioRummikub(jugadorActual);
 
-                    if (accio == 1) {
+                    if (accio == AGAFAR_FITXA) {
                         if (!haTocatTauler && !barallabuida) {
                             accioCompletada = jocActual.agafarFitxa(jugadorActual);
                         } else {
-                            Consola.missatgeAccio1RummikubNoValida();
+                            Consola.missatgeNoEsPotRobarCartaRummikub();
                         }
-                    } else if (accio == 2) {
+                    } else if (accio == TIRAR_COMBINACIONS) {
                         boolean tiradaFeta = jocActual.tirarFitxes(jugadorActual);
                         if (tiradaFeta) {
                             haTocatTauler = true;
                         }
-                    } else if (accio == 3) {
+                    } else if (accio == MODIFICAR_COMBINACIONS) {
                         if (jugadorActual.haFetPrimeraTirada && primerTornAcabat) {
                             boolean modificacioFeta = jocActual.modificarTaula(jugadorActual);
                             if (modificacioFeta) {
@@ -67,11 +67,11 @@ public class Rummikub extends Normes {
                         } else {
                             Consola.missatgeModificacioNoPossible();
                         }
-                    } else if (accio == 4) {
+                    } else if (accio == FINALITZAR_TORN) {
                         if (haTocatTauler || barallabuida) {
                             accioCompletada = true;
                         } else {
-                            Consola.missatgeAccio4RummikubNoValida();
+                            Consola.missatgeNoFinalitzarTornRummikub();
                         }
                     }
                 }
@@ -84,7 +84,7 @@ public class Rummikub extends Normes {
                     tornsDarreraRonda--;
 
                     if (tornsDarreraRonda == 0) {
-                        hiHaGuanyador = determinarGuanyador();
+                        hiHaGuanyador = jocActual.determinarGuanyador();
                     }
                 }
 
@@ -147,7 +147,7 @@ public class Rummikub extends Normes {
 
             if (puntsTotals >= 30) {
                 jugador.haFetPrimeraTirada = true;
-                Consola.missatgeCombinacioValida();
+                Consola.missatgePrimeraTiradaRummikubValida();
 
                 for (int i = 0; i < combinacionsNoves.size(); i++) {
                     ArrayList<Carta> combinacio = combinacionsNoves.get(i);
@@ -155,7 +155,7 @@ public class Rummikub extends Normes {
                 }
                 return true;
             } else {
-                Consola.missatgeMinimPuntsIncorrecte(puntsTotals);
+                Consola.missatgeMinimPuntsRummikubIncorrecte(puntsTotals);
 
                 jugador.maCartes.clear();
                 jugador.maCartes.addAll(copiaMaInicial);
@@ -184,23 +184,21 @@ public class Rummikub extends Normes {
         boolean seguirModificant = true;
 
         while (seguirModificant && !jugador.maCartes.isEmpty()) {
-            Consola.espais();
-            Consola.missatgeMostrarTaula();
-            Consola.mostrarTaulaComuna(Joc.taulaComuna);
+            mostrarTaulaComuna();
             Consola.espais();
             Consola.missatgeCartes();
             Consola.mostrarMaCartes(jugador.maCartes);
             Consola.espais();
 
-            int opcio = Consola.demanarQueModificar(jugador);
+            int opcio = Consola.demanarQueModificarRummiKub(jugador);
 
-            if (opcio == 0) {
+            if (opcio == ACABAR_MODIFICACIONS) {
                 seguirModificant = false;
-            } else if (opcio == 1) {
+            } else if (opcio == AFEGIR_FITXA_COMBINACIO) {
                 afegirFitxaCombinacio(jugador);
-            } else if (opcio == 2) {
+            } else if (opcio == MOURE_FITXA_COMBI_EXISTENT) {
                 moureFitxaEntreCombinacions();
-            } else if (opcio == 3) {
+            } else if (opcio == MOURE_FITXA_COMBI_NOVA) {
                 moureFitxaNovaCombinacio();
             }
         }
@@ -217,7 +215,6 @@ public class Rummikub extends Normes {
         }
 
         if (jugador.maCartes.size() >= numCartesMaJugador) {
-            Consola.missatgeMinimTirarUnaCarta();
             jugador.maCartes.clear();
             jugador.maCartes.addAll(copiaMaInicial);
             Joc.taulaComuna.clear();
@@ -313,17 +310,17 @@ public class Rummikub extends Normes {
 
         Carta carta = Joc.taulaComuna.get(indexOrigen).remove(indexCarta);
         combinacioDesti.add(carta);
-        Consola.missatgeCartaAfegida(0, posDarrerIndex -1);
+        Consola.missatgeCartaAfegida(0, posDarrerIndex - 1);
 
         if (Joc.taulaComuna.get(indexOrigen).size() == 0) {
             Joc.taulaComuna.remove(indexOrigen);
         }
     }
 
-    private static boolean determinarGuanyador() {
+    private boolean determinarGuanyador() {
         int fitxesMinimes = Joc.arrayJugadors[0].getMaCartes().size();
         Jugador jugadorGuanyador = Joc.arrayJugadors[0];
-        jugadorGuanyador.puntuacio = comptarPuntsCasEmpat(jugadorGuanyador);
+        calcularPuntsMa(jugadorGuanyador);
 
         for (int i = 1; i < Joc.arrayJugadors.length; i++) {
             Jugador jugadorActual = Joc.arrayJugadors[i];
@@ -331,9 +328,9 @@ public class Rummikub extends Normes {
             if (fitxesActuals < fitxesMinimes) {
                 fitxesMinimes = fitxesActuals;
                 jugadorGuanyador = jugadorActual;
-                jugadorGuanyador.puntuacio = comptarPuntsCasEmpat(jugadorGuanyador);
+                calcularPuntsMa(jugadorGuanyador);
             } else if (fitxesActuals == fitxesMinimes) {
-                jugadorActual.puntuacio = comptarPuntsCasEmpat(jugadorActual);
+                calcularPuntsMa(jugadorActual);
                 if (jugadorActual.puntuacio < jugadorGuanyador.puntuacio) {
                     jugadorGuanyador = jugadorActual;
                 }
@@ -341,20 +338,6 @@ public class Rummikub extends Normes {
         }
         Consola.missatgeGuanyador(jugadorGuanyador);
         return true;
-    }
-
-    private static int comptarPuntsCasEmpat(Jugador jugador) {
-        int numPunts = 0;
-        Carta cartaActual;
-        for (int i = 0; i < jugador.maCartes.size(); i++) {
-            cartaActual = jugador.getMaCartes().get(i);
-            if (cartaActual.esJoker()) {
-                numPunts += 30;
-            } else {
-                numPunts += cartaActual.getValor();
-            }
-        }
-        return numPunts;
     }
 
     private int comptarPuntsCombinacio(ArrayList<Carta> combinacio) {
@@ -395,4 +378,16 @@ public class Rummikub extends Normes {
         }
         return false;
     }
+
+    public void calcularPuntsMa(Jugador jugador) {
+        jugador.puntsMa = 0;
+        for (int i = 0; i < jugador.maCartes.size(); i++) {
+            if (jugador.maCartes.get(i).esJoker()) {
+                jugador.puntsMa += 30;
+            } else {
+                jugador.puntsMa += jugador.maCartes.get(i).getValor();
+            }
+        }
+    }
+
 }

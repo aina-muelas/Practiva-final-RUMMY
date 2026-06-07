@@ -1,9 +1,15 @@
 import java.util.ArrayList;
 
 public class RummyArgentino extends Normes {
-
     private static int numPuntsGuanyar;
-    private static boolean esDePilaDescarts = false;
+
+    private static final int FINALITZAR_TORN = 1;
+    private static final int TIRAR_COMBINACIONS = 2;
+    private static final int MODIFICAR_COMBINACIONS = 3;
+
+    private static final int ACABAR_MODIFICACIONS = 1;
+    private static final int AFEGIR_FITXA_COMBINACIO = 2;
+    private static final int SUBSTITUIR_COMODI = 3;
 
     public static void jugarRummyArgentino() {
 
@@ -19,7 +25,7 @@ public class RummyArgentino extends Normes {
             while (!hiHaGuanyadorRonda) {
                 int opcio = Consola.demanarSiVolJugarOGuardar();
 
-                if (opcio == 2) {
+                if (opcio == GUARDAR_PARTIDA) {
                     Joc.guardarEstatPartida();
                 } else {
                     if (Joc.barallaPartida.baralla.isEmpty()) {
@@ -28,9 +34,11 @@ public class RummyArgentino extends Normes {
 
                     Consola.imprimirPuntsJugadors(Joc.arrayJugadors);
                     Jugador jugadorActual = Joc.arrayJugadors[Torn.jugaActual];
-                    jocActual.mostrarInfoAJugador(jugadorActual);
 
-                    esDePilaDescarts = false;
+                    jocActual.mostrarTaulaComuna();
+                    jocActual.mostrarInfoGeneralAJugador(jugadorActual);
+                    jocActual.mostrarInfoAgafarCartaBarallaODescartades();
+
                     Carta cartaAgafada = jocActual.agafarCarta();
                     jugadorActual.maCartes.add(cartaAgafada);
                     ordenarCartes(jugadorActual.maCartes);
@@ -38,13 +46,13 @@ public class RummyArgentino extends Normes {
 
                     boolean accioCompletada = false;
                     while (!accioCompletada) {
-                        int accio = Consola.demanarQueFerRummyArgentino();
+                        int accio = Consola.demanarAccioRummyArgentino();
 
-                        if (accio == 1) {
+                        if (accio == FINALITZAR_TORN) {
                             accioCompletada = true;
-                        } else if (accio == 2) {
+                        } else if (accio == TIRAR_COMBINACIONS) {
                             jocActual.tirarCombinacions(jugadorActual);
-                        } else if (accio == 3) {
+                        } else if (accio == MODIFICAR_COMBINACIONS) {
                             jocActual.modificarTaula(jugadorActual);
                         }
 
@@ -82,8 +90,8 @@ public class RummyArgentino extends Normes {
             Joc.arrayJugadors[i].puntsMa = 0;
         }
 
-        int numBaralles = Baralla.determinarQuantitatBaralles(1, Joc.arrayJugadors.length);
-        Joc.barallaPartida.inicialitzarBaralla(1, numBaralles);
+        int numBaralles = Baralla.determinarQuantitatBaralles(Baralla.RUMMY_ARGENTINO, Joc.arrayJugadors.length);
+        Joc.barallaPartida.inicialitzarBaralla(Baralla.RUMMY_ARGENTINO, numBaralles);
         Joc.barallaPartida.mesclarCartes();
         Joc.repartirCartes(Joc.barallaPartida);
 
@@ -95,29 +103,6 @@ public class RummyArgentino extends Normes {
         Carta cartaInicial = Joc.barallaPartida.baralla.get(tamanyBaralla - 1);
         Joc.barallaPartida.baralla.remove(tamanyBaralla - 1);
         Joc.pilaDescartades.add(cartaInicial);
-    }
-
-    private void restaurarBarallaSiEstaBuida() {
-        Carta cartaAAfegir = Joc.pilaDescartades.getLast();
-        Joc.pilaDescartades.remove(Joc.pilaDescartades.size() - 1);
-
-        Joc.barallaPartida.baralla.addAll(Joc.pilaDescartades);
-        Joc.barallaPartida.mesclarCartes();
-        Joc.pilaDescartades.clear();
-        Joc.pilaDescartades.add(cartaAAfegir);
-    }
-
-    private void mostrarInfoAJugador(Jugador jugadorActual) {
-        Consola.tornDe(jugadorActual.nom);
-        Consola.espais();
-        Consola.mostrarTaulaComuna(Joc.taulaComuna);
-        Consola.espais();
-        Consola.missatgeCartes();
-        Consola.mostrarMaCartes(jugadorActual.maCartes);
-        Consola.espais();
-        Consola.imprimirNumFitxesBaralla(Joc.barallaPartida.baralla);
-        Consola.darreraCartaPilaDescards(Joc.pilaDescartades.getLast());
-        Consola.espais();
     }
 
     private int obtenirValorCarta(Carta carta) {
@@ -137,26 +122,6 @@ public class RummyArgentino extends Normes {
             return 5;
         }
         return 0;
-    }
-
-    private Carta agafarCarta() {
-        Carta cartaAgafada = null;
-        int opcioAgafar = Consola.demanarDonAgafar();
-
-        if (opcioAgafar == 1) {
-            int midaBaralla = Joc.barallaPartida.baralla.size();
-            cartaAgafada = Joc.barallaPartida.baralla.get(midaBaralla - 1);
-            Joc.barallaPartida.baralla.remove(midaBaralla - 1);
-            Consola.mostrarCartaRobada(cartaAgafada);
-            esDePilaDescarts = false;
-        } else if (opcioAgafar == 2) {
-            int midaPilaDescarts = Joc.pilaDescartades.size();
-            cartaAgafada = Joc.pilaDescartades.get(midaPilaDescarts - 1);
-            Joc.pilaDescartades.remove(midaPilaDescarts - 1);
-            Consola.mostrarCartaRobada(cartaAgafada);
-            esDePilaDescarts = true;
-        }
-        return cartaAgafada;
     }
 
     private boolean tirarCombinacions(Jugador jugador) {
@@ -258,11 +223,11 @@ public class RummyArgentino extends Normes {
 
             int opcio = Consola.demanarQueModificarArgentino();
 
-            if (opcio == 1) {
+            if (opcio == ACABAR_MODIFICACIONS) {
                 seguirModificant = false;
-            } else if (opcio == 2) {
+            } else if (opcio == AFEGIR_FITXA_COMBINACIO) {
                 afegirFitxaCombinacio(jugador);
-            } else if (opcio == 3) {
+            } else if (opcio == SUBSTITUIR_COMODI) {
                 substituirComodi(jugador);
             }
         }
@@ -279,7 +244,6 @@ public class RummyArgentino extends Normes {
         }
 
         if (jugador.maCartes.size() >= numCartesMaJugador) {
-            Consola.missatgeMinimTirarUnaCarta();
             jugador.maCartes.clear();
             jugador.maCartes.addAll(copiaMaInicial);
             Joc.taulaComuna.clear();
@@ -330,7 +294,7 @@ public class RummyArgentino extends Normes {
 
         Carta cartaASubstituir = Joc.taulaComuna.get(indexOrigen).get(indexCartaASubstituir);
         if (!cartaASubstituir.esMono() && !cartaASubstituir.esJoker()) {
-            System.out.println("No es pot moure una carta que NO sigui un comodi");
+            Consola.missatgeNoPotMoureComodiRummyArgenti();
             return;
         }
 
@@ -346,7 +310,7 @@ public class RummyArgentino extends Normes {
         Joc.taulaComuna.get(indexOrigen).set(indexOrigen, cartaQueSubstitueix);
         jugador.maCartes.remove(indexCartaSubstitueix);
 
-        int opcio = Consola.demanarOnMoure();
+        int opcio = Consola.demanarOnMoureRummyArgenti();
 
         if (opcio == moureCombincioExistent) {
             moureFitxaEntreCombinacions(cartaASubstituir);
@@ -413,34 +377,6 @@ public class RummyArgentino extends Normes {
         Consola.missatgeCartaAfegida(0, posDarrerIndex);
     }
 
-    private void descartarCarta(Jugador jugadorActual, Carta cartaAgafada) {
-        boolean haDescartatCarta = false;
-        while (!haDescartatCarta) {
-            Consola.missatgeTriarCartaDescartar();
-            int numCartaDescartar = Consola.demanarIndexCarta(jugadorActual.maCartes);
-            Carta cartaQueVolDescartar = jugadorActual.maCartes.get(numCartaDescartar);
-
-            if (cartaAgafada.equals(cartaQueVolDescartar) && esDePilaDescarts) {
-                Consola.missatgeNoEsPotDescartar(cartaQueVolDescartar);
-            } else {
-                Joc.pilaDescartades.add(cartaQueVolDescartar);
-                jugadorActual.maCartes.remove(numCartaDescartar);
-                Consola.missatgeSiEsPotDescartar(cartaQueVolDescartar);
-                haDescartatCarta = true;
-            }
-        }
-    }
-
-    private int comptarPunts(ArrayList<Carta> cartesJugador) {
-        int punts = 0;
-
-        for (int i = 0; i < cartesJugador.size(); i++) {
-            Carta cartaActual = cartesJugador.get(i);
-            punts += obtenirValorCarta(cartaActual);
-        }
-        return punts;
-    }
-
     private int comptarPuntsCombinacio(ArrayList<Carta> combinacio) {
         int punts = 0;
         boolean esGrup = esGrupValid(combinacio);
@@ -461,7 +397,7 @@ public class RummyArgentino extends Normes {
         for (int i = 0; i < combinacio.size(); i++) {
             Carta cartaActual = combinacio.get(i);
 
-            if(cartaActual.esJoker()) {
+            if (cartaActual.esJoker()) {
                 punts += 50;
             } else if (cartaActual.esMono()) {
                 int rangSuplantat;
@@ -491,7 +427,9 @@ public class RummyArgentino extends Normes {
         if (jugadorActual.maCartes.isEmpty()) {
             for (int i = 0; i < Joc.arrayJugadors.length; i++) {
                 if (Joc.arrayJugadors[i] != jugadorActual) {
-                    jugadorActual.puntuacio += comptarPunts(Joc.arrayJugadors[i].maCartes);
+                    Jugador jugadorRivalActu = Joc.arrayJugadors[i];
+                    calcularPuntsMa(jugadorRivalActu);
+                    jugadorActual.puntuacio += jugadorRivalActu.puntsMa;
                 }
             }
             Consola.missatgeGuanyadorRonda(jugadorActual, jugadorActual.puntuacio);
@@ -515,4 +453,13 @@ public class RummyArgentino extends Normes {
         }
         return false;
     }
+
+    public void calcularPuntsMa(Jugador jugador) {
+        jugador.puntsMa = 0;
+        for (int i = 0; i < jugador.maCartes.size(); i++) {
+            Carta cartaActual = jugador.maCartes.get(i);
+            jugador.puntsMa += obtenirValorCarta(cartaActual);
+        }
+    }
+
 }
