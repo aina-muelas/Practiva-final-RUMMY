@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public abstract class Normes {
 
-    protected boolean esDePilaDescarts = false;
+    private boolean esDePilaDescarts = false;
 
     public static final int GUARDAR_PARTIDA = 2;
     private static final int AGAFAR_CARTA_BARALLA = 1;
