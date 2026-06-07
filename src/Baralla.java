@@ -4,12 +4,12 @@ import java.util.Collections;
 
 public class Baralla implements Serializable {
     ArrayList<Carta> baralla = new ArrayList<Carta>();
-    final String[] numerosFrancesa = {"AS", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
-    final int[] valorsFrancesa = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10};
-    final String joker = "Joker";
-    final String[] palsFrancesa = {"Pica", "Trevol", "Cor", "Diamant"};
+    private final String[] numerosFrancesa = {"AS", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
+    private final int[] valorsFrancesa = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10};
+    private final String joker = "Joker";
+    private final String[] palsFrancesa = {"Pica", "Trevol", "Cor", "Diamant"};
 
-    final String[] colorsRummiKub = {"Vermell", "Blau", "Groc", "Negre"};
+    private final String[] colorsRummiKub = {"Vermell", "Blau", "Groc", "Negre"};
 
     public final static int RUMMY_CLASSIC = 1;
     public final static int RUMMIKUB = 2;
@@ -61,7 +61,7 @@ public class Baralla implements Serializable {
         baralla.add(new Carta(joker, "Comodí", 0));
     }
 
-    static int determinarQuantitatBaralles(int modalitat, int numJugadors) {
+    public static int determinarQuantitatBaralles(int modalitat, int numJugadors) {
         if (modalitat == RUMMY_CLASSIC) {
             return 1;
         } else if (modalitat == RUMMIKUB) {
