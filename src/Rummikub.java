@@ -2,7 +2,6 @@ import java.util.ArrayList;
 
 public class Rummikub extends Normes {
 
-    private static final int GUARDAR_PARTIDA = 2;
     private static final int AGAFAR_FITXA = 1;
     private static final int TIRAR_COMBINACIONS = 2;
     private static final int MODIFICAR_COMBINACIONS = 3;
@@ -27,22 +26,16 @@ public class Rummikub extends Normes {
             if (opcio == GUARDAR_PARTIDA) {
                 Joc.guardarEstatPartida();
             } else {
-                Consola.espais();
-                Consola.missatgeMostrarTaula();
-                Consola.mostrarTaulaComuna(Joc.taulaComuna);
-                Consola.espais();
 
                 boolean haTocatTauler = false;
                 boolean accioCompletada = false;
                 int accio;
 
                 Jugador jugadorActual = Joc.arrayJugadors[Torn.jugaActual];
-                Consola.tornDe(jugadorActual.nom);
-                Consola.espais();
-                Consola.missatgeCartes();
                 ordenarCartes(jugadorActual.maCartes);
-                Consola.mostrarMaCartes(jugadorActual.maCartes);
-                Consola.espais();
+
+                jocActual.mostrarTaulaComuna();
+                jocActual.mostrarInfoGeneralAJugador(jugadorActual);
 
                 if (jugadorActual.haFetPrimeraTirada) {
                     primerTornAcabat = true;

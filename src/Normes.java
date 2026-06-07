@@ -2,6 +2,12 @@ import java.util.ArrayList;
 
 public abstract class Normes {
 
+    protected boolean esDePilaDescarts = false;
+
+    public static final int GUARDAR_PARTIDA = 2;
+    private static final int AGAFAR_CARTA_BARALLA = 1;
+    private static final int AGAFAR_CARTA_DESCARTADES = 2;
+
     public static int agafarRang(Carta carta) {
         switch (carta.numero) {
             case "AS":
@@ -17,6 +23,27 @@ public abstract class Normes {
             default:
                 return carta.getValor();
         }
+    }
+
+    public void mostrarInfoGeneralAJugador(Jugador jugadorActual) {
+        Consola.tornDe(jugadorActual.nom);
+        Consola.espais();
+        Consola.missatgeCartes();
+        Consola.mostrarMaCartes(jugadorActual.maCartes);
+        Consola.espais();
+    }
+
+    public void mostrarTaulaComuna() {
+        Consola.espais();
+        Consola.missatgeMostrarTaula();
+        Consola.mostrarTaulaComuna(Joc.taulaComuna);
+        Consola.espais();
+    }
+
+    public void mostrarInfoAgafarCartaBarallaODescartades() {
+        Consola.imprimirNumFitxesBaralla(Joc.barallaPartida.baralla);
+        Consola.darreraCartaPilaDescards(Joc.pilaDescartades.getLast());
+        Consola.espais();
     }
 
     boolean esGrupValid(ArrayList<Carta> combinacio) {
@@ -168,7 +195,56 @@ public abstract class Normes {
         return false;
     }
 
+    public Carta agafarCarta() {
+        Carta cartaAgafada = null;
+        int opcioAgafar = Consola.demanarDonAgafar();
+
+        if (opcioAgafar == AGAFAR_CARTA_BARALLA) {
+            int midaBaralla = Joc.barallaPartida.baralla.size();
+            cartaAgafada = Joc.barallaPartida.baralla.get(midaBaralla - 1);
+            Joc.barallaPartida.baralla.remove(midaBaralla - 1);
+            Consola.mostrarCartaRobada(cartaAgafada);
+            esDePilaDescarts = false;
+        } else if (opcioAgafar == AGAFAR_CARTA_DESCARTADES) {
+            int midaPilaDescarts = Joc.pilaDescartades.size();
+            cartaAgafada = Joc.pilaDescartades.get(midaPilaDescarts - 1);
+            Joc.pilaDescartades.remove(midaPilaDescarts - 1);
+            Consola.mostrarCartaRobada(cartaAgafada);
+            esDePilaDescarts = true;
+        }
+        return cartaAgafada;
+    }
+
+    public void descartarCarta(Jugador jugadorActual, Carta cartaAgafada) {
+        boolean haDescartatCarta = false;
+        while (!haDescartatCarta) {
+            Consola.missatgeTriarCartaDescartar();
+            int numCartaDescartar = Consola.demanarIndexCarta(jugadorActual.maCartes);
+            Carta cartaQueVolDescartar = jugadorActual.maCartes.get(numCartaDescartar);
+
+            if (cartaAgafada.equals(cartaQueVolDescartar) && esDePilaDescarts) {
+                Consola.missatgeNoEsPotDescartar(cartaQueVolDescartar);
+            } else {
+                Joc.pilaDescartades.add(cartaQueVolDescartar);
+                jugadorActual.maCartes.remove(numCartaDescartar);
+                Consola.missatgeSiEsPotDescartar(cartaQueVolDescartar);
+                haDescartatCarta = true;
+            }
+        }
+    }
+
+    public void restaurarBarallaSiEstaBuida() {
+        Carta cartaAAfegir = Joc.pilaDescartades.getLast();
+        Joc.pilaDescartades.remove(Joc.pilaDescartades.size() - 1);
+
+        Joc.barallaPartida.baralla.addAll(Joc.pilaDescartades);
+        Joc.barallaPartida.mesclarCartes();
+        Joc.pilaDescartades.clear();
+        Joc.pilaDescartades.add(cartaAAfegir);
+    }
+
     public abstract boolean haGuanyat(Jugador jugador);
 
     public abstract void calcularPuntsMa(Jugador jugador);
+
 }

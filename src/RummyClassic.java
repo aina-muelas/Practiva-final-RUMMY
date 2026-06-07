@@ -2,16 +2,11 @@ import java.util.ArrayList;
 
 public class RummyClassic extends Normes {
 
-    private static final int GUARDAR_PARTIDA = 2;
     private static final int FINALITZAR_TORN = 1;
     private static final int TIRAR_COMBINACIONS = 2;
     private static final int MODIFICAR_COMBINACIONS = 3;
 
-    private static final int AGAFAR_CARTA_BARALLA = 1;
-    private static final int AGAFAR_CARTA_DESCARTADES = 2;
-
     private static int numPuntsGuanyar;
-    private static boolean esDePilaDescarts = false;
 
     public static void jugarRummyClassic() {
         RummyClassic jocActual = new RummyClassic();
@@ -35,9 +30,10 @@ public class RummyClassic extends Normes {
 
                     Consola.imprimirPuntsJugadors(Joc.arrayJugadors);
                     Jugador jugadorActual = Joc.arrayJugadors[Torn.jugaActual];
-                    jocActual.mostrarInfoAJugador(jugadorActual);
+                    jocActual.mostrarTaulaComuna();
+                    jocActual.mostrarInfoGeneralAJugador(jugadorActual);
+                    jocActual.mostrarInfoAgafarCartaBarallaODescartades();
 
-                    esDePilaDescarts = false;
                     Carta cartaAgafada = jocActual.agafarCarta();
                     jugadorActual.maCartes.add(cartaAgafada);
                     ordenarCartes(jugadorActual.maCartes);
@@ -103,49 +99,6 @@ public class RummyClassic extends Normes {
         Joc.pilaDescartades.add(cartaInicial);
     }
 
-    private void restaurarBarallaSiEstaBuida() {
-        Carta cartaAAfegir = Joc.pilaDescartades.getLast();
-        Joc.pilaDescartades.remove(Joc.pilaDescartades.size() - 1);
-
-        Joc.barallaPartida.baralla.addAll(Joc.pilaDescartades);
-        Joc.barallaPartida.mesclarCartes();
-        Joc.pilaDescartades.clear();
-        Joc.pilaDescartades.add(cartaAAfegir);
-    }
-
-    private void mostrarInfoAJugador(Jugador jugadorActual) {
-        Consola.tornDe(jugadorActual.nom);
-        Consola.espais();
-        Consola.mostrarTaulaComuna(Joc.taulaComuna);
-        Consola.espais();
-        Consola.missatgeCartes();
-        Consola.mostrarMaCartes(jugadorActual.maCartes);
-        Consola.espais();
-        Consola.imprimirNumFitxesBaralla(Joc.barallaPartida.baralla);
-        Consola.darreraCartaPilaDescards(Joc.pilaDescartades.getLast());
-        Consola.espais();
-    }
-
-    private Carta agafarCarta() {
-        Carta cartaAgafada = null;
-        int opcioAgafar = Consola.demanarDonAgafar();
-
-        if (opcioAgafar == AGAFAR_CARTA_BARALLA) {
-            int midaBaralla = Joc.barallaPartida.baralla.size();
-            cartaAgafada = Joc.barallaPartida.baralla.get(midaBaralla - 1);
-            Joc.barallaPartida.baralla.remove(midaBaralla - 1);
-            Consola.mostrarCartaRobada(cartaAgafada);
-            esDePilaDescarts = false;
-        } else if (opcioAgafar == AGAFAR_CARTA_DESCARTADES) {
-            int midaPilaDescarts = Joc.pilaDescartades.size();
-            cartaAgafada = Joc.pilaDescartades.get(midaPilaDescarts - 1);
-            Joc.pilaDescartades.remove(midaPilaDescarts - 1);
-            Consola.mostrarCartaRobada(cartaAgafada);
-            esDePilaDescarts = true;
-        }
-        return cartaAgafada;
-    }
-
     private boolean tirarCombinacions(Jugador jugador) {
         ArrayList<Carta> copiaMaInicial = new ArrayList<>(jugador.getMaCartes());
 
@@ -209,24 +162,6 @@ public class RummyClassic extends Normes {
         jugador.maCartes.remove(indexCarta);
         combinacio.add(indexPosicio, carta);
         Consola.missatgeCartaAfegida(indexPosicio, indexCombinacio);
-    }
-
-    private void descartarCarta(Jugador jugadorActual, Carta cartaAgafada) {
-        boolean haDescartatCarta = false;
-        while (!haDescartatCarta) {
-            Consola.missatgeTriarCartaDescartar();
-            int numCartaDescartar = Consola.demanarIndexCarta(jugadorActual.maCartes);
-            Carta cartaQueVolDescartar = jugadorActual.maCartes.get(numCartaDescartar);
-
-            if (cartaAgafada.equals(cartaQueVolDescartar) && esDePilaDescarts) {
-                Consola.missatgeNoEsPotDescartar(cartaQueVolDescartar);
-            } else {
-                Joc.pilaDescartades.add(cartaQueVolDescartar);
-                jugadorActual.maCartes.remove(numCartaDescartar);
-                Consola.missatgeSiEsPotDescartar(cartaQueVolDescartar);
-                haDescartatCarta = true;
-            }
-        }
     }
 
     private boolean guanyadorRonda(Jugador jugadorActual) {
