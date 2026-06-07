@@ -151,8 +151,6 @@ public abstract class Normes {
         return combinacioOrdenada;
     }
 
-    public abstract boolean haGuanyat(Jugador jugador);
-
     public boolean esCombinacioValida(ArrayList<Carta> combinacio) {
         if (combinacio == null || combinacio.size() < 3 || combinacio.size() > 13) {
             return false;
@@ -169,4 +167,8 @@ public abstract class Normes {
         }
         return false;
     }
+
+    public abstract boolean haGuanyat(Jugador jugador);
+
+    public abstract void calcularPuntsMa(Jugador jugador);
 }

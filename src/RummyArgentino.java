@@ -443,16 +443,6 @@ public class RummyArgentino extends Normes {
         }
     }
 
-    private int comptarPunts(ArrayList<Carta> cartesJugador) {
-        int punts = 0;
-
-        for (int i = 0; i < cartesJugador.size(); i++) {
-            Carta cartaActual = cartesJugador.get(i);
-            punts += obtenirValorCarta(cartaActual);
-        }
-        return punts;
-    }
-
     private int comptarPuntsCombinacio(ArrayList<Carta> combinacio) {
         int punts = 0;
         boolean esGrup = esGrupValid(combinacio);
@@ -473,7 +463,7 @@ public class RummyArgentino extends Normes {
         for (int i = 0; i < combinacio.size(); i++) {
             Carta cartaActual = combinacio.get(i);
 
-            if(cartaActual.esJoker()) {
+            if (cartaActual.esJoker()) {
                 punts += 50;
             } else if (cartaActual.esMono()) {
                 int rangSuplantat;
@@ -503,7 +493,9 @@ public class RummyArgentino extends Normes {
         if (jugadorActual.maCartes.isEmpty()) {
             for (int i = 0; i < Joc.arrayJugadors.length; i++) {
                 if (Joc.arrayJugadors[i] != jugadorActual) {
-                    jugadorActual.puntuacio += comptarPunts(Joc.arrayJugadors[i].maCartes);
+                    Jugador jugadorRivalActu = Joc.arrayJugadors[i];
+                    calcularPuntsMa(jugadorRivalActu);
+                    jugadorActual.puntuacio += jugadorRivalActu.puntsMa;
                 }
             }
             Consola.missatgeGuanyadorRonda(jugadorActual, jugadorActual.puntuacio);
@@ -527,4 +519,13 @@ public class RummyArgentino extends Normes {
         }
         return false;
     }
+
+    public void calcularPuntsMa(Jugador jugador) {
+        jugador.puntsMa = 0;
+        for (int i = 0; i < jugador.maCartes.size(); i++) {
+            Carta cartaActual = jugador.maCartes.get(i);
+            jugador.puntsMa += obtenirValorCarta(cartaActual);
+        }
+    }
+
 }

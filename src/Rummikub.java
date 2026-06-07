@@ -95,7 +95,7 @@ public class Rummikub extends Normes {
                     tornsDarreraRonda--;
 
                     if (tornsDarreraRonda == 0) {
-                        hiHaGuanyador = determinarGuanyador();
+                        hiHaGuanyador = jocActual.determinarGuanyador();
                     }
                 }
 
@@ -331,10 +331,10 @@ public class Rummikub extends Normes {
         }
     }
 
-    private static boolean determinarGuanyador() {
+    private boolean determinarGuanyador() {
         int fitxesMinimes = Joc.arrayJugadors[0].getMaCartes().size();
         Jugador jugadorGuanyador = Joc.arrayJugadors[0];
-        jugadorGuanyador.puntuacio = comptarPuntsCasEmpat(jugadorGuanyador);
+        calcularPuntsMa(jugadorGuanyador);
 
         for (int i = 1; i < Joc.arrayJugadors.length; i++) {
             Jugador jugadorActual = Joc.arrayJugadors[i];
@@ -342,9 +342,9 @@ public class Rummikub extends Normes {
             if (fitxesActuals < fitxesMinimes) {
                 fitxesMinimes = fitxesActuals;
                 jugadorGuanyador = jugadorActual;
-                jugadorGuanyador.puntuacio = comptarPuntsCasEmpat(jugadorGuanyador);
+                calcularPuntsMa(jugadorGuanyador);
             } else if (fitxesActuals == fitxesMinimes) {
-                jugadorActual.puntuacio = comptarPuntsCasEmpat(jugadorActual);
+                calcularPuntsMa(jugadorActual);
                 if (jugadorActual.puntuacio < jugadorGuanyador.puntuacio) {
                     jugadorGuanyador = jugadorActual;
                 }
@@ -352,20 +352,6 @@ public class Rummikub extends Normes {
         }
         Consola.missatgeGuanyador(jugadorGuanyador);
         return true;
-    }
-
-    private static int comptarPuntsCasEmpat(Jugador jugador) {
-        int numPunts = 0;
-        Carta cartaActual;
-        for (int i = 0; i < jugador.maCartes.size(); i++) {
-            cartaActual = jugador.getMaCartes().get(i);
-            if (cartaActual.esJoker()) {
-                numPunts += 30;
-            } else {
-                numPunts += cartaActual.getValor();
-            }
-        }
-        return numPunts;
     }
 
     private int comptarPuntsCombinacio(ArrayList<Carta> combinacio) {
@@ -406,4 +392,16 @@ public class Rummikub extends Normes {
         }
         return false;
     }
+
+    public void calcularPuntsMa(Jugador jugador) {
+        jugador.puntsMa = 0;
+        for (int i = 0; i < jugador.maCartes.size(); i++) {
+            if (jugador.maCartes.get(i).esJoker()) {
+                jugador.puntsMa += 30;
+            } else {
+                jugador.puntsMa += jugador.maCartes.get(i).getValor();
+            }
+        }
+    }
+
 }

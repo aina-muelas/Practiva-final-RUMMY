@@ -10,10 +10,6 @@ public class RummyClassic extends Normes {
     private static final int AGAFAR_CARTA_BARALLA = 1;
     private static final int AGAFAR_CARTA_DESCARTADES = 2;
 
-    private static final int ACABAR_MODIFICACIONS = 1;
-    private static final int AFEGIR_FITXA_COMBINACIO = 2;
-    private static final int SUBSTITUIR_COMODI = 3;
-
     private static int numPuntsGuanyar;
     private static boolean esDePilaDescarts = false;
 
@@ -233,24 +229,13 @@ public class RummyClassic extends Normes {
         }
     }
 
-    private int comptarPunts(ArrayList<Carta> cartesJugador) {
-        int punts = 0;
-
-        for (int i = 0; i < cartesJugador.size(); i++) {
-            if (cartesJugador.get(i).esAS()) {
-                punts += 15;
-            } else {
-                punts += cartesJugador.get(i).getValor();
-            }
-        }
-        return punts;
-    }
-
     private boolean guanyadorRonda(Jugador jugadorActual) {
         if (jugadorActual.maCartes.isEmpty()) {
             for (int i = 0; i < Joc.arrayJugadors.length; i++) {
                 if (Joc.arrayJugadors[i] != jugadorActual) {
-                    jugadorActual.puntuacio += comptarPunts(Joc.arrayJugadors[i].maCartes);
+                    Jugador jugadorRivalActu = Joc.arrayJugadors[i];
+                    calcularPuntsMa(jugadorRivalActu);
+                    jugadorActual.puntuacio += jugadorRivalActu.puntsMa;
                 }
             }
             Consola.missatgeGuanyadorRonda(jugadorActual, jugadorActual.puntuacio);
@@ -267,4 +252,18 @@ public class RummyClassic extends Normes {
         }
         return false;
     }
+
+    public void calcularPuntsMa(Jugador jugador) {
+        jugador.puntsMa = 0;
+
+        for (int i = 0; i < jugador.maCartes.size(); i++) {
+            Carta cartaActual = jugador.maCartes.get(i);
+            if (cartaActual.esAS()) {
+                jugador.puntsMa += 15;
+            } else {
+                jugador.puntsMa += cartaActual.getValor();
+            }
+        }
+    }
+
 }
