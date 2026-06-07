@@ -267,6 +267,7 @@ public class GinRummy extends Normes {
 
     private void mirarGuanyadorRonda(Jugador jugadorQueHaTancat, int opcioTancament) {
         int indexRival;
+        String tipusVictoria = "";
 
         if (jugadorQueHaTancat == Joc.arrayJugadors[0]) {
             indexRival = 1;
@@ -280,14 +281,17 @@ public class GinRummy extends Normes {
 
         if (opcioTancament == TANCAMENT_BIG_GIN) {
             jugadorQueHaTancat.puntuacio += jugadorRival.puntsMa + 50;
-            Consola.missatgeBigGinGin(jugadorQueHaTancat);
+            tipusVictoria = "Big Gin";
+            Consola.missatgeGuanyadorRondakGin(jugadorQueHaTancat, tipusVictoria);
         } else if (opcioTancament == TANCAMENT_GIN) {
             jugadorQueHaTancat.puntuacio += jugadorRival.puntsMa + 25;;
-            Consola.missatgeGinGin(jugadorQueHaTancat);
+            tipusVictoria = "Gin";
+            Consola.missatgeGuanyadorRondakGin(jugadorQueHaTancat, tipusVictoria);
         } else if (opcioTancament == TANCAMENT_KNOCK) {
             if (jugadorQueHaTancat.puntsMa < jugadorRival.puntsMa) {
-                jugadorQueHaTancat.puntuacio += jugadorRival.puntsMa - jugadorQueHaTancat.puntsMa;;
-                Consola.missatgeKnockGin(jugadorQueHaTancat);
+                jugadorQueHaTancat.puntuacio += jugadorRival.puntsMa - jugadorQueHaTancat.puntsMa;
+                tipusVictoria = "Knock";
+                Consola.missatgeGuanyadorRondakGin(jugadorQueHaTancat, tipusVictoria);
             } else {
                 jugadorRival.puntuacio += (jugadorQueHaTancat.puntsMa - jugadorRival.puntuacio + 25);
                 Consola.missatgePerdutRondaGin(jugadorQueHaTancat);

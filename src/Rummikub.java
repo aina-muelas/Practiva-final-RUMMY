@@ -55,7 +55,7 @@ public class Rummikub extends Normes {
                         if (!haTocatTauler && !barallabuida) {
                             accioCompletada = jocActual.agafarFitxa(jugadorActual);
                         } else {
-                            Consola.missatgeAccio1RummikubNoValida();
+                            Consola.missatgeNoEsPotRobarCartaRummikub();
                         }
                     } else if (accio == TIRAR_COMBINACIONS) {
                         boolean tiradaFeta = jocActual.tirarFitxes(jugadorActual);
@@ -75,7 +75,7 @@ public class Rummikub extends Normes {
                         if (haTocatTauler || barallabuida) {
                             accioCompletada = true;
                         } else {
-                            Consola.missatgeAccio4RummikubNoValida();
+                            Consola.missatgeNoFinalitzarTornRummikub();
                         }
                     }
                 }
@@ -151,7 +151,7 @@ public class Rummikub extends Normes {
 
             if (puntsTotals >= 30) {
                 jugador.haFetPrimeraTirada = true;
-                Consola.missatgeCombinacioValida();
+                Consola.missatgePrimeraTiradaRummikubValida();
 
                 for (int i = 0; i < combinacionsNoves.size(); i++) {
                     ArrayList<Carta> combinacio = combinacionsNoves.get(i);
@@ -159,7 +159,7 @@ public class Rummikub extends Normes {
                 }
                 return true;
             } else {
-                Consola.missatgeMinimPuntsIncorrecte(puntsTotals);
+                Consola.missatgeMinimPuntsRummikubIncorrecte(puntsTotals);
 
                 jugador.maCartes.clear();
                 jugador.maCartes.addAll(copiaMaInicial);
@@ -196,7 +196,7 @@ public class Rummikub extends Normes {
             Consola.mostrarMaCartes(jugador.maCartes);
             Consola.espais();
 
-            int opcio = Consola.demanarQueModificar(jugador);
+            int opcio = Consola.demanarQueModificarRummiKub(jugador);
 
             if (opcio == ACABAR_MODIFICACIONS) {
                 seguirModificant = false;
@@ -221,7 +221,6 @@ public class Rummikub extends Normes {
         }
 
         if (jugador.maCartes.size() >= numCartesMaJugador) {
-            Consola.missatgeMinimTirarUnaCarta();
             jugador.maCartes.clear();
             jugador.maCartes.addAll(copiaMaInicial);
             Joc.taulaComuna.clear();

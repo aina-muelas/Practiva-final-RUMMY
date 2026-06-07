@@ -39,7 +39,7 @@ public class GuardarORestaurarPartida {
             fitxerSortida.writeObject(pilarDescartades);
             fitxerSortida.close();
         } catch (IOException e) {
-            System.out.println("Problema, no s'ha pogut guardar la partida amb el nom '"  + nomArxiu + ".bin'");
+            Consola.missatgeErrorGuardarPartida(nomArxiu);
         }
     }
 
@@ -54,11 +54,11 @@ public class GuardarORestaurarPartida {
             this.pilarDescartades = (ArrayList<Carta>) fitxerEntrada.readObject();
             fitxerEntrada.close();
         } catch (FileNotFoundException e) {
-            System.out.println("No es troba el fitxer: " + nomArxiu + ".bin");
+            Consola.noHaTrobatArxiuRestaurar(nomArxiu);
         } catch (IOException e) {
-            System.out.println("Problema d'acces a l'arxiu: " + nomArxiu + ".bin");
+            Consola.noHiHaAccesArxiuRestaurar(nomArxiu);
         } catch (ClassNotFoundException e) {
-            System.out.println("Les dades obtingudes no permeten recuperar la partida");
+            Consola.dadesNoPermetenRecuperarPartida(nomArxiu);
         }
     }
 

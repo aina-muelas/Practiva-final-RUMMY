@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 
 public class RummyArgentino extends Normes {
-
     private static int numPuntsGuanyar;
 
     private static final int FINALITZAR_TORN = 1;
@@ -47,7 +46,7 @@ public class RummyArgentino extends Normes {
 
                     boolean accioCompletada = false;
                     while (!accioCompletada) {
-                        int accio = Consola.demanarQueFerRummyArgentino();
+                        int accio = Consola.demanarAccioRummyArgentino();
 
                         if (accio == FINALITZAR_TORN) {
                             accioCompletada = true;
@@ -245,7 +244,6 @@ public class RummyArgentino extends Normes {
         }
 
         if (jugador.maCartes.size() >= numCartesMaJugador) {
-            Consola.missatgeMinimTirarUnaCarta();
             jugador.maCartes.clear();
             jugador.maCartes.addAll(copiaMaInicial);
             Joc.taulaComuna.clear();
@@ -296,7 +294,7 @@ public class RummyArgentino extends Normes {
 
         Carta cartaASubstituir = Joc.taulaComuna.get(indexOrigen).get(indexCartaASubstituir);
         if (!cartaASubstituir.esMono() && !cartaASubstituir.esJoker()) {
-            System.out.println("No es pot moure una carta que NO sigui un comodi");
+            Consola.missatgeNoPotMoureComodiRummyArgenti();
             return;
         }
 
@@ -312,7 +310,7 @@ public class RummyArgentino extends Normes {
         Joc.taulaComuna.get(indexOrigen).set(indexOrigen, cartaQueSubstitueix);
         jugador.maCartes.remove(indexCartaSubstitueix);
 
-        int opcio = Consola.demanarOnMoure();
+        int opcio = Consola.demanarOnMoureRummyArgenti();
 
         if (opcio == moureCombincioExistent) {
             moureFitxaEntreCombinacions(cartaASubstituir);

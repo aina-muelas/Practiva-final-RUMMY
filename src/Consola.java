@@ -32,48 +32,6 @@ public class Consola {
         }
     }
 
-    public static int demanarSiVolJugarOGuardar() {
-        int opcio = 0;
-        while (opcio != 1 && opcio != 2) {
-            System.out.println("Que vols fer?");
-            System.out.println("1. Seguir jugant");
-            System.out.println("2. Sortir i guardar la partida");
-            opcio = scanner.nextInt();
-            scanner.nextLine();
-            if (opcio != 1 && opcio != 2) {
-                System.out.println("Opció invalida, torna a triar");
-            }
-        }
-        return opcio;
-    }
-
-    public static void mostrarMaCartes(ArrayList<Carta> cartes) {
-        for (int i = 0; i < cartes.size(); i++) {
-            Carta c = cartes.get(i);
-            System.out.println((i + 1) + ". " + c.toString());
-        }
-    }
-
-    public static void mostrarTaulaComuna(ArrayList<ArrayList<Carta>> taula) {
-        if (taula.isEmpty()) {
-            System.out.println("La taula esta buida");
-            return;
-        }
-        for (int i = 0; i < taula.size(); i++) {
-            System.out.println("Combinació " + (i + 1) + ": " + taula.get(i));
-        }
-    }
-
-    public static void mostrarCombinacionsPossibles(ArrayList<ArrayList<Carta>> taula) {
-        if (taula.isEmpty()) {
-            System.out.println("No hi ha combinacions disponibles");
-            return;
-        }
-        for (int i = 0; i < taula.size(); i++) {
-            System.out.println("Combinació " + (i + 1) + ": " + taula.get(i));
-        }
-    }
-
     public static int triarModalitat() {
         int modalitat = 0;
         while (modalitat <= 0) {
@@ -130,6 +88,89 @@ public class Consola {
         return nom;
     }
 
+    public static int demanarSiVolJugarOGuardar() {
+        int opcio = 0;
+        while (opcio != 1 && opcio != 2) {
+            System.out.println("Que vols fer?");
+            System.out.println("1. Seguir jugant");
+            System.out.println("2. Sortir i guardar la partida");
+            opcio = scanner.nextInt();
+            scanner.nextLine();
+            if (opcio != 1 && opcio != 2) {
+                System.out.println("Opció invalida, torna a triar");
+            }
+        }
+        return opcio;
+    }
+
+    public static String demanarNomPartida() {
+        System.out.println("Introdueix el nom de la partida");
+        String nomPartida = scanner.nextLine();
+        return nomPartida;
+    }
+
+    public static int numPuntsGuanyar(int numJugadors) {
+        int numPunts = 0;
+        int puntsMinims = 0;
+        if (numJugadors == 2) {
+            puntsMinims = 100;
+        } else if (numJugadors == 3) {
+            puntsMinims = 150;
+        } else if (numJugadors == 4) {
+            puntsMinims = 200;
+        } else if (numJugadors == 5) {
+            puntsMinims = 250;
+        } else if (numJugadors == 6) {
+            puntsMinims = 300;
+        }
+
+        while (numPunts < puntsMinims) {
+            System.out.println("Quants de punts voleu que s'hagin de fer per guanyar la partida?");
+            System.out.println("Recordau que el minim per : " + numJugadors + " jugadors es " + puntsMinims);
+
+            numPunts = scanner.nextInt();
+            scanner.nextLine();
+
+            if (numPunts < puntsMinims) {
+                System.out.println("El numero de punts no supera els minims, torna a triar");
+            }
+        }
+        return numPunts;
+    }
+
+    public static void imprimirPuntsJugadors (Jugador [] matriuJugadors) {
+        for (int i = 0; i < matriuJugadors.length; i++) {
+            System.out.println(matriuJugadors[i].nom + " tens " + matriuJugadors[i].puntuacio + " punts en total");
+        }
+    }
+
+    public static void mostrarMaCartes(ArrayList<Carta> cartes) {
+        for (int i = 0; i < cartes.size(); i++) {
+            Carta c = cartes.get(i);
+            System.out.println((i + 1) + ". " + c.toString());
+        }
+    }
+
+    public static void mostrarTaulaComuna(ArrayList<ArrayList<Carta>> taula) {
+        if (taula.isEmpty()) {
+            System.out.println("La taula esta buida");
+            return;
+        }
+        for (int i = 0; i < taula.size(); i++) {
+            System.out.println("Combinació " + (i + 1) + ": " + taula.get(i));
+        }
+    }
+
+    public static void mostrarCombinacionsPossibles(ArrayList<ArrayList<Carta>> taula) {
+        if (taula.isEmpty()) {
+            System.out.println("No hi ha combinacions disponibles");
+            return;
+        }
+        for (int i = 0; i < taula.size(); i++) {
+            System.out.println("Combinació " + (i + 1) + ": " + taula.get(i));
+        }
+    }
+
     public static int demanarAccioRummikub(Jugador jugadorActual) {
         int opcio = 0;
         while (opcio != 1 && opcio != 2 && opcio != 3 && opcio!= 4) {
@@ -170,7 +211,7 @@ public class Consola {
         int accio = 0;
         while(accio != 1 && accio != 2 && accio != 3) {
             System.out.println("Tria una opció:");
-            System.out.println("1. Acabar acció (per si no pots o no vols tirar cartes i/o combinacions) ");
+            System.out.println("1. Acabar torn (per si no pots o no vols tirar cartes i/o combinacions) ");
             System.out.println("2. Tirar una nova combinació");
             System.out.println("3. Afegir una carta a una combinació existent)");
             accio = scanner.nextInt();
@@ -181,6 +222,22 @@ public class Consola {
             }
         }
         return accio;
+    }
+
+    public static int demanarAccioRummyArgentino() {
+        int opcio = -1;
+        while (opcio != 1 && opcio != 2 && opcio != 3) {
+            System.out.println("Tria que vols modificar:");
+            System.out.println("1. Sortir/ acabar torn");
+            System.out.println("2. Tirar combinacions");
+            System.out.println("3. Modificar el tauler");
+            opcio = scanner.nextInt();
+            scanner.nextLine();
+            if (opcio != 1 && opcio != 2 && opcio != 3) {
+                System.out.println("Opció no vàlida, torna a triar");
+            }
+        }
+        return opcio;
     }
 
     public static ArrayList<Carta> demanarNovaCombinacioRummyKub(Jugador jugador) {
@@ -257,7 +314,7 @@ public class Consola {
         return true;
     }
 
-    public static int demanarQueModificar (Jugador jugador) {
+    public static int demanarQueModificarRummiKub(Jugador jugador) {
         System.out.println("Que vols fer?");
         System.out.println("1. Afegir una carta de la teva mà a una combinació");
         System.out.println("2. Moure una carta d'una combinació a una altra");
@@ -265,6 +322,22 @@ public class Consola {
         System.out.println("0. Sortir/acabar modificacions");
         int opcio = Consola.scanner.nextInt();
         Consola.scanner.nextLine();
+        return opcio;
+    }
+
+    public static int demanarQueModificarArgentino() {
+        int opcio = -1;
+        while (opcio != 1 && opcio != 2 && opcio != 3) {
+            System.out.println("Tria que vols modificar:");
+            System.out.println("1. Acabar/Sortir de les modificacions");
+            System.out.println("2. Afrgir una carta a una combinació existent");
+            System.out.println("3. Substituir un comodi per una carta de la ma, i moure el comodi");
+            opcio = scanner.nextInt();
+            scanner.nextLine();
+            if (opcio != 1 && opcio != 2 && opcio != 3) {
+                System.out.println("Opció no vàlida, torna a truar");
+            }
+        }
         return opcio;
     }
 
@@ -307,7 +380,7 @@ public class Consola {
         return opcio;
     }
 
-    public static int demanarOnMoure() {
+    public static int demanarOnMoureRummyArgenti() {
         int opcio = -1;
         while (opcio != 1 && opcio != 2) {
             System.out.println("Tria on vols moure el comodi: 1. Combinacio existent, 2. Nova combinacio");
@@ -320,136 +393,59 @@ public class Consola {
         return opcio;
     }
 
-    public static int demanarQueFerRummyArgentino() {
-        int opcio = -1;
-        while (opcio != 1 && opcio != 2 && opcio != 3) {
-            System.out.println("Tria que vols modificar:");
-            System.out.println("1. Sortir/ acabar torn");
-            System.out.println("2. Tirar combinacions");
-            System.out.println("3. Modificar el tauler");
-            opcio = scanner.nextInt();
-            scanner.nextLine();
-            if (opcio != 1 && opcio != 2 && opcio != 3) {
-                System.out.println("Opció no vàlida, torna a truar");
-            }
-        }
-        return opcio;
-    }
-
-    public static int demanarQueModificarArgentino() {
-        int opcio = -1;
-        while (opcio != 1 && opcio != 2 && opcio != 3) {
-            System.out.println("Tria que vols modificar:");
-            System.out.println("1. Acabar/Sortir de les modificacions");
-            System.out.println("2. Afrgir una carta a una combinació existent");
-            System.out.println("3. Substituir un comodi per una carta de la ma, i moure el comodi");
-            opcio = scanner.nextInt();
-            scanner.nextLine();
-            if (opcio != 1 && opcio != 2 && opcio != 3) {
-                System.out.println("Opció no vàlida, torna a truar");
-            }
-        }
-        return opcio;
-    }
-
-    public static int numPuntsGuanyar(int numJugadors) {
-        int numPunts = 0;
-        int puntsMinims = 0;
-        if (numJugadors == 2) {
-            puntsMinims = 100;
-        } else if (numJugadors == 3) {
-            puntsMinims = 150;
-        } else if (numJugadors == 4) {
-            puntsMinims = 200;
-        } else if (numJugadors == 5) {
-            puntsMinims = 250;
-        } else if (numJugadors == 6) {
-            puntsMinims = 300;
-        }
-
-        while (numPunts < puntsMinims) {
-            System.out.println("Quants de punts voleu que s'hagin de fer per guanyar la partida?");
-            System.out.println("Recordau que el minim per : " + numJugadors + " jugadors es " + puntsMinims);
-
-            numPunts = scanner.nextInt();
-            scanner.nextLine();
-
-            if (numPunts < puntsMinims) {
-                System.out.println("El numero de punts no supera els minims, torna a triar");
-            }
-        }
-        return numPunts;
-    }
-
-    public static void imprimirPuntsJugadors (Jugador [] matriuJugadors) {
-        for (int i = 0; i < matriuJugadors.length; i++) {
-            System.out.println(matriuJugadors[i].nom + " tens " + matriuJugadors[i].puntuacio + " punts en total");
-        }
-    }
-
-    public static String demanarNomPartida() {
-        System.out.println("Introdueix el nom de la partida");
-        String nomPartida = scanner.nextLine();
-        return nomPartida;
-    }
 
     // comentaris comuns a totes les modalitats
     public static void espais() { System.out.println("------------------------------------------------------------"); }
     public static void tornDe(String nom) { System.out.println("És el torn del jugador/a: " + nom); }
+    public static void missatgeGuanyador(Jugador jugador) { System.out.println("Enhorabona " + jugador.nom + " has guanyat!!!"); }
     // comentaris guardar/restaurar partida
     public static void missatgePartidaRestauradaCorrecte(String nomPartida) { System.out.println("La partida " + nomPartida + " s'ha carregat correctament"); }
     public static void missatgePartidaGuardada(String nomPartida) { System.out.println("La partida " + nomPartida + " s'ha guardat correctament"); }
+    public static void missatgeErrorGuardarPartida(String nomArxiu) { System.out.println("Problema, no s'ha pogut guardar la partida amb el nom '"  + nomArxiu + ".bin'"); }
+    public static void noHaTrobatArxiuRestaurar(String nomArxiu) { System.out.println("No es troba l'arxiu: " + nomArxiu + ".bin"); }
+    public static void noHiHaAccesArxiuRestaurar(String nomArxiu) { System.out.println("Problema d'acces a l'arxiu: " + nomArxiu + ".bin"); }
+    public static void dadesNoPermetenRecuperarPartida(String nomArxiu) { System.out.println("Les dades obtingudes no permeten recuperar la partida " + nomArxiu); }
     // comentaris baralla / cartes
-    public static void missatgeMostrarTaula() { System.out.println("Les combinacions que hi ha a la taula són les següents:"); }
     public static void missatgeCartes() { System.out.println("Les teves cartes actuals: "); }
-    public static void mostrarCartaRobada(Carta cartaRobada) { System.out.println("Has robat la carta: " + cartaRobada); }
     public static void missatgeBarallaBuida() { System.out.println("La baralla esta buida, tria una altre opció"); }
     public static void imprimirNumFitxesBaralla(ArrayList<Carta> baralla) { System.out.println("A la baralla queden " + baralla.size() + " fitxes"); }
-    public static void darreraCartaPilaDescards(Carta cartaDescartada) { System.out.println("La carta que pots agafar de la pila de descards és: " + cartaDescartada); }
-    // comentaris sobre els punts
     // missatge combinacions
+    public static void missatgeMostrarTaula() { System.out.println("Les combinacions que hi ha a la taula són les següents:"); }
     public static void missatgeCombinacioNoValida() { System.out.println("La teva combinacio no es valida"); }
     public static void missatgeJugadaAcceptada() { System.out.println("Jugada acceptada i afegida a la taula"); }
     // missatges modificacions
     public static void missatgeModificacioNoValida() { System.out.println("Les modificacions no són vàlides, es restaura l'estat anterior"); }
     public static void missatgeModificacioValida() { System.out.println("Les modificacions són vàlides, es guardara el nou estat"); }
-    //missatges guanyadors
-    public static void missatgeGuanyador(Jugador jugador) { System.out.println("Enhorabona " + jugador.nom + " has guanyat!!!"); }
-    // altres
-    public static void missatgeMinimTirarUnaCarta() { System.out.println("Has de tirar almenys una carta de la teva mà per completar el torn"); }
+    // missatges robar / descartar cartes
+    public static void mostrarCartaRobada(Carta cartaRobada) { System.out.println("Has robat la carta: " + cartaRobada); }
+    public static void darreraCartaPilaDescards(Carta cartaDescartada) { System.out.println("La carta que pots agafar de la pila de descards és: " + cartaDescartada); }
+    public static void missatgeSiEsPotDescartar(Carta carta) { System.out.println("la carta " + carta + " s'ha descartat correctament de la teva ma"); }
+    public static void missatgeTriarCartaDescartar() { System.out.println("tria l'index de la carta que vols descartar, recorda que no pot ser la mateixa que acabdes d'agafar si l'has agafada de la pila de descarts"); }
+    public static void missatgeNoEsPotDescartar(Carta carta) { System.out.println("la carta " + carta + " no es pot decartar, ja es la mateix que has agafat de la pila de descarts"); }
+    // missatges modificacio i sel.leccio de cartes
     public static void missatgeIndexNoValid() { System.out.println("l'índex triat no es vàlid"); }
     public static void missatgePosicioNoValida() { System.out.println("la posicio triada no es vàlida"); }
     public static void missatgeCartaAfegida(int indexPosicio, int indexCombinacio) { System.out.println("Carta afegida a la posició " + (indexPosicio + 1) + " de la combinació " + (indexCombinacio + 1)); }
-
-    public static void missatgeAccio1RummikubNoValida() { System.out.println("No es pot agafar una carta, ja has modificat el tauler o no hi ha fitxes a la baralla"); }
-    public static void missatgeAccio4RummikubNoValida() { System.out.println("No es pots finalitzar el torn, has de modificar/afegir combinacions o agafar una fitxa"); }
-
+    // comentaris guanyador ronda / empat
+    public static void missatgeGuanyadorRonda(Jugador jugador, int puntuacio) { System.out.println("Enhorabona " + jugador.nom + " has guanyat la ronda la ronda amb, ara tens " + puntuacio + " punts"); }
+    public static void missatgeGuanyadorRondakGin(Jugador jugador, String tipusVictoria) { System.out.println("Enhorabona " + jugador.nom + " Guanyes la ronda, has fet un " + tipusVictoria); }
+    public static void missatgeEmpatGin () { System.out.println("Empat! ningu guanya punts a aquesta ronda"); }
     // comentaris del rummikub
-    public static void missatgeMinimPuntsIncorrecte(int punts) { System.out.println("Es la teva primera tirada, has de tirar MINIM 30 punts, i les teves combinacions fan: " + punts); }
-    public static void missatgeCombinacioValida() { System.out.println("Primera combinacio de 30 punts o més acceptada!"); }
+    public static void missatgeMinimPuntsRummikubIncorrecte(int punts) { System.out.println("Es la teva primera tirada, has de tirar MINIM 30 punts, i les teves combinacions fan: " + punts); }
+    public static void missatgePrimeraTiradaRummikubValida() { System.out.println("Primera combinacio de 30 punts o més acceptada!"); }
     public static void missatgeModificacioNoPossible() { System.out.println("No pots modificar la taula, recorda que per poder fer-ho has d'haver fet la primera jugada de minim 30 punts"); }
+    public static void missatgeNoEsPotRobarCartaRummikub() { System.out.println("No es pot agafar una carta, ja has modificat el tauler o no hi ha fitxes a la baralla"); }
+    public static void missatgeNoFinalitzarTornRummikub() { System.out.println("No es pots finalitzar el torn, has de modificar/afegir combinacions o agafar una fitxa"); }
     public static void missatgeDarreraRonda() { System.out.println("Atenció, estas a la darrera ronda de la partida"); }
-    // comentaris gin rummy
-    public static void missatgeNoEsPotDescartar(Carta carta) { System.out.println("la carta " + carta + " no es pot decartar, ja es la mateix que has agafat de la pila de descarts"); }
-    public static void missatgeSiEsPotDescartar(Carta carta) { System.out.println("la carta " + carta + " s'ha descartat correctament de la teva ma"); }
-    public static void missatgeTriarCartaDescartar() { System.out.println("tria l'index de la carta que vols descartar, recorda que no pot ser la mateixa que acabdes d'agafar si l'has agafada de la pila de descarts"); }
+    // comentaris especifics gin rummy
     public static void missatgeRivalTiraCombi(Jugador jugadorRival) { System.out.println(jugadorRival + " es el teu torn de tirar les combinacions");}
     public static void missatgePerdutRondaGin(Jugador jugador) { System.out.println("Has perdut la ronda " + jugador.nom + " el rival te igual o menys punts que tu"); }
-
-    public static void missatgeKnockGin(Jugador jugador) { System.out.println("Enhorabona " + jugador.nom + " has fet un Knock! Guanyes la ronda"); }
-    public static void missatgeGinGin(Jugador jugador) { System.out.println("Enhorabona " + jugador.nom + " has fet un GIN! Guanyes la ronda"); }
-    public static void missatgeBigGinGin(Jugador jugador) { System.out.println("Enhorabona " + jugador.nom + " has fet un BIG GIN! Guanyes la ronda"); }
-    public static void missatgeEmpatGin () { System.out.println("Empat! ningu guanya punts a aquesta ronda"); }
-
     public static void missatgeMillorCombinacio() { System.out.println("La millor combinacio amb la teva ma és: "); }
     public static void missatgeCartesMortes(ArrayList<Carta> cartesMortes) { System.out.println("Les teves cartes mortes serien: " + cartesMortes); }
     public static void missatgePuntsMorts(int puntsMorts) { System.out.println("Els punts morts són: " + puntsMorts + " (per tancar la ronda en pots tenir màxim 10"); }
-
-    // comentaris rummy classic
-    public static void missatgeGuanyadorRonda(Jugador jugador, int puntuacio) { System.out.println("Enhorabona " + jugador.nom + " has guanyat la ronda la ronda amb, ara tens " + puntuacio + " punts"); }
-
-    // comentaris rummy argentini
+    // comentaris rummy argenti
     public static void missatgeMaSupera700() { System.out.println("la teva ma de cartes supera els 700 punts, a la tirada n'has de fer minim 100"); }
     public static void missatgeNumComodinsInvalidArgentino() { System.out.println("Error, a un grup NOMES pot haver 1 comodi"); }
     public static void missatgeNumComodinsTotalsInvalidArgentino() { System.out.println("Error, a una jugada no pots tirar 3 comodins del mateix tipus (joker o mono) a una mateixa jugada"); }
+    public static void missatgeNoPotMoureComodiRummyArgenti() { System.out.println("No es pot moure una carta que NO sigui un comodi"); }
 }
